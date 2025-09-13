@@ -47,8 +47,84 @@
             max-width: 100%;
         }
     }
+
+    /* --- Filtre çubuğu --- */
+    .filter-bar {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        padding: .5rem .75rem;
+        margin-bottom: .5rem;
+        background: #f6f7fb;
+        border-radius: .75rem;
+        border: 1px solid rgba(0,0,0,.06);
+    }
+
+        .filter-bar label {
+            font-weight: 600;
+            margin-right: .25rem;
+        }
+
+        .filter-bar select {
+            padding: .35rem .5rem;
+            border-radius: .5rem;
+            border: 1px solid #ddd;
+        }
+
+        .filter-bar button {
+            padding: .4rem .75rem;
+            border-radius: .5rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+        }
+
+            .filter-bar button:hover {
+                background: #efefef;
+            }
+
+    [hidden] {
+        display: none !important;
+    }
+
+    .filter-toggle-wrap {
+        display: flex;
+        justify-content: flex-end;
+        gap: .5rem;
+        padding: .25rem .75rem;
+        margin-bottom: .25rem;
+    }
+
+    
 </style>
 
+<!-- ===== FİLTRE ÇUBUĞU ===== -->
+<div id="filter-bar" class="filter-bar" hidden
+     style="margin-bottom:1rem; background:#fff3cd; border:1px solid #f0ad4e; padding:.75rem; border-radius:.5rem;">
+    <label for="filter-role">İkon:</label>
+    <select id="filter-role">
+        <option value="laser">Lazer Sensörü</option>
+        <option value="sound">Ses / Hoparlör</option>
+        <option value="intercom">İnterkom</option>
+        <option value="door">Kapı</option>
+        <option value="device">Acil Çağrı</option>
+        <option value="cold">Soğuk Su Sayacı</option>
+        <option value="hot">Sıcak Su Sayacı</option>
+        <option value="elec">Elektrik Sayacı</option>
+        <option value="degree">Sıcaklık Sensörü</option>
+        <option value="humidity">Nem Sensörü</option>
+    </select>
+
+    <label for="filter-state" style="margin-left:1rem;">Durum:</label>
+    <select id="filter-state">
+        <option value="2">Alarm Durumu</option>
+        <option value="1" selected>Aktif (Çalışıyor)</option>
+        <option value="0">Pasif (Kapalı)</option>
+    </select>
+
+    <button type="button" id="apply-filter" style="margin-left:1rem;">Uygula</button>
+    <button type="button" id="clear-filter">Temizle</button>
+</div>
 
 
 
@@ -155,7 +231,6 @@
                                 </span>
                             </div>
 
-
                             <div style="width:20%;">
                                 <img src="@humIcon" asp-append-version="true" style="height:48px;" data-role="humidity-icon" data-ip="@ipTrim" />
                                 <br />
@@ -197,9 +272,126 @@
 </div>
 
 <script>
+    // === GLOBALS ===
     const lastSeen = new Map();
     const basePulseUrl = '@Url.Page("Index", "Pulse")';
 
+    // Seçili filtre (yoksa null)
+    let currentSort = null; // { roleKey: string, target: number } | null
+
+    // === FİLTRELEME & SIRALAMA ===
+    // Durum haritalaması: Alarm=2, Aktif=1, Pasif=0
+    function stateFromSrc(img) {
+        if (!img) return 0;
+        const src = (img.getAttribute('src') || '').toLowerCase();
+        if (src.includes('alarm')) return 2;
+        if (src.includes('aktif')) return 1;
+        if (src.includes('pasif')) return 0;
+        return 0; // bilinmiyorsa pasif say
+    }
+
+    function imgForRole(cardEl, roleKey) {
+        switch (roleKey) {
+            case 'laser':    return cardEl.querySelector('img[data-role="laser-icon"]');
+            case 'sound':    return cardEl.querySelector('img[data-role="sound-icon"]');
+            case 'intercom': return cardEl.querySelector('img[data-role="intercom-icon"]');
+            case 'door':     return cardEl.querySelector('img[data-role="door-icon"]');
+            case 'device':   return cardEl.querySelector('img.device-icon');
+            case 'cold':     return cardEl.querySelector('img[data-role="cold-icon"]');
+            case 'hot':      return cardEl.querySelector('img[data-role="hot-icon"]');
+            case 'elec':     return cardEl.querySelector('img[data-role="elec-icon"]');
+            case 'degree':   return cardEl.querySelector('img[data-role="degree-icon"]');
+            case 'humidity': return cardEl.querySelector('img[data-role="humidity-icon"]');
+            default:         return null;
+        }
+    }
+
+    function getStateForRole(cardEl, roleKey) {
+        const img = imgForRole(cardEl, roleKey);
+        return stateFromSrc(img);
+    }
+
+    function sortCardsBy(roleKey, target) {
+        const grid = document.querySelector('.cards-grid');
+        if (!grid) return;
+
+        const cards = Array.from(grid.querySelectorAll('.device-card'));
+        const withState = cards.map((el) => ({
+            el,
+            orig: Number(el.getAttribute('data-original-index') ?? '0'),
+            val: getStateForRole(el, roleKey) // 0/1/2
+        }));
+
+        // Hedef değer (target) üstte; eşitlikte Alarm>Aktif>Pasif; sonra orijinal sıra
+        withState.sort((a, b) => {
+            const aMatch = (a.val === target) ? 1 : 0;
+            const bMatch = (b.val === target) ? 1 : 0;
+            if (aMatch !== bMatch) return bMatch - aMatch; // hedef önce
+            if (a.val !== b.val)   return b.val - a.val;   // 2>1>0
+            return a.orig - b.orig;
+        });
+
+        withState.forEach(x => grid.appendChild(x.el));
+    }
+
+    function reapplySortIfAny() {
+        if (currentSort && currentSort.roleKey) {
+            sortCardsBy(currentSort.roleKey, currentSort.target);
+        }
+    }
+
+    // === UI BAĞLANTI & ORİJİNAL SIRA KAYDI ===
+    document.addEventListener('DOMContentLoaded', () => {
+        // Orijinal sıralamayı kaydet
+        const grid = document.querySelector('.cards-grid');
+        if (grid) {
+            Array.from(grid.querySelectorAll('.device-card'))
+                 .forEach((el, idx) => el.setAttribute('data-original-index', String(idx)));
+        }
+
+        // Filtre kontrolleri
+        const roleSel  = document.getElementById('filter-role');
+        const stateSel = document.getElementById('filter-state');
+        const btnApply = document.getElementById('apply-filter');
+        const btnClear = document.getElementById('clear-filter');
+
+        btnApply && btnApply.addEventListener('click', () => {
+            const roleKey = (roleSel && roleSel.value) ? roleSel.value : 'laser';
+            const target = Number(stateSel && stateSel.value ? stateSel.value : 1); // 2/1/0
+            currentSort = { roleKey, target };
+            sortCardsBy(roleKey, target);
+        });
+
+        btnClear && btnClear.addEventListener('click', () => {
+            currentSort = null;
+            const grid2 = document.querySelector('.cards-grid');
+            if (!grid2) return;
+            const cards = Array.from(grid2.querySelectorAll('.device-card'));
+            cards.sort((a, b) =>
+                Number(a.getAttribute('data-original-index')) -
+                Number(b.getAttribute('data-original-index'))
+            );
+            cards.forEach(c => grid2.appendChild(c));
+        });
+
+        // Filtre bar toggle (ikonlu buton, text değiştirmiyor)
+        const toggleBtn = document.getElementById('toggle-filter');
+        const filterBar = document.getElementById('filter-bar');
+        if (toggleBtn && filterBar) {
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = filterBar.hasAttribute('hidden');
+                if (isHidden) {
+                    filterBar.removeAttribute('hidden');
+                    toggleBtn.setAttribute('aria-expanded','true');
+                } else {
+                    filterBar.setAttribute('hidden','');
+                    toggleBtn.setAttribute('aria-expanded','false');
+                }
+            });
+        }
+    });
+
+    // === POLL (MEVCUT) ===
     function buildPulseUrl() {
         const u = new URL(basePulseUrl, window.location.origin);
         u.searchParams.set('_', Date.now().toString());
@@ -287,7 +479,7 @@
                     const humSpan = document.querySelector(`span[data-role="humidity-value"][data-ip="${ip}"]`);
                     if (humSpan && ('humidityValue' in raw)) humSpan.textContent = (raw.humidityValue ?? '-');
 
-                    // YENİ: Laser / Sound / Intercom / Door
+                    // Laser / Sound / Intercom / Door
                     const laserImg = document.querySelector(`img[data-role="laser-icon"][data-ip="${ip}"]`);
                     if (laserImg && raw.laserIconUrl) {
                         const u6 = new URL(raw.laserIconUrl, window.location.origin);
@@ -319,7 +511,11 @@
                     lastSeen.set(ip, ticks);
                 }
             }
-        } catch (e) { }
+
+            // Yeni veriler işlendi: varsa filtreyi tekrar uygula
+            reapplySortIfAny();
+
+        } catch (e) { /* sessizce yut */ }
     }
 
     setInterval(poll, 2000);
