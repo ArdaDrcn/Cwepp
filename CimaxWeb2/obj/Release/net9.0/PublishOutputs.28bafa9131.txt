@@ -1,0 +1,13 @@
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\CimaxWeb2.exe
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\appsettings.Development.json
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\appsettings.json
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\CimaxWeb2.dll
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\CimaxWeb2.deps.json
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\CimaxWeb2.runtimeconfig.json
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\CimaxWeb2.pdb
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\DnsClient.dll
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\MongoDB.Bson.dll
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\MongoDB.Driver.dll
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\SharpCompress.dll
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\Snappier.dll
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\CimaxWeb2\CimaxWeb2\obj\Release\net9.0\PubTmp\Out\ZstdSharp.dll

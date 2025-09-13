@@ -1,0 +1,401 @@
+
+* {
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+@media print {
+ .table, .table__body {
+  overflow: visible;
+  height: auto !important;
+  width: auto !important;
+ }
+}
+
+/*@page {
+    size: landscape;
+    margin: 0; 
+}*/
+
+main.table {
+    height: 90vh;
+    background-color: #fff5;
+
+    backdrop-filter: blur(7px);
+    box-shadow: 0 .4rem .8rem #0005;
+    border-radius: 1.8rem;
+
+    overflow: hidden;
+}
+
+.table__header {
+    width: 100%;
+    height: 10%;
+    background-color: #fff4;
+    padding: .8rem 1rem;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table__header .input-group {
+    height: 75%;
+    background-color: #fff5;
+    padding: 0 4.8rem;
+    border-radius: 2rem;
+    background-color: rgb(235, 216, 216);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: .4s;
+}
+
+.table__header .input-group input {
+    padding: 0 .5rem 0 6.8rem;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.table__body {
+    width: 95%;
+    max-height: calc(89% - 1.6rem);
+    background-color: #fffb;
+
+    margin: .8rem auto;
+    border-radius: .8rem;
+
+    overflow: auto;
+    overflow: overlay;
+    white-space: nowrap;
+    font-size: small;
+}
+
+.table__bodys {
+    width: 95%;
+    max-height: calc(89% - 0rem);
+    background-color: #fffb;
+
+    margin: .8rem auto;
+    border-radius: .8rem;
+
+    overflow: auto;
+    overflow: overlay;
+    white-space: nowrap;
+    font-size: small;
+}
+
+
+.table__body::-webkit-scrollbar{
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+.table__body::-webkit-scrollbar-thumb{
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.table__body:hover::-webkit-scrollbar-thumb{ 
+    visibility: visible;
+}
+
+
+table {
+    width: 100%;
+}
+
+td img {
+    width: 20px;
+    margin-right: .2rem;
+    vertical-align: middle;
+}
+
+table, th, td {
+    border-collapse: collapse;
+    padding: 0.2rem;
+    text-align: left;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: #d5d1defe;
+    cursor: default; /* Başlık metni tıklanamaz */
+    text-transform: capitalize;
+    user-select: none; /* Metin seçilemez */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #0000000b;
+}
+
+tbody tr {
+    --delay: .1s;
+    transition: .5s ease-in-out var(--delay), background-color 0s;
+}
+
+tbody tr.hide {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+tbody tr:hover {
+    background-color: #ff8c0041 !important;
+}
+
+tbody tr td,
+tbody tr td p,
+tbody tr td img {
+    transition: .2s ease-in-out;
+}
+
+tbody tr.hide td,
+tbody tr.hide td p {
+    padding: 0;
+    font: 0 / 0 sans-serif;
+    transition: .2s ease-in-out .5s;
+}
+
+tbody tr.hide td img {
+    width: 0;
+    height: 0;
+    transition: .2s ease-in-out .5s;
+}
+
+.status {
+    padding: .4rem 0;
+    border-radius: 2rem;
+    text-align: center;
+}
+
+.status.delivered {
+    background-color: #86e49d;
+    color: #006b21;
+}
+
+.status.cancelled {
+    background-color: #d893a3;
+    color: #b30021;
+}
+
+.status.pending {
+    background-color: #ebc474;
+}
+
+.status.shipped {
+    background-color: black;
+}
+
+@media (max-width: 1000px) {
+}
+
+thead th span.icon-arrow {
+    display: inline-block;
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 50%;
+    border: 1.4px solid transparent;
+    text-align: center;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    cursor: pointer; /* Yalnızca ok üzerine gelindiğinde işaret değişir */
+    transition: .2s ease-in-out;
+}
+
+thead th:hover span.icon-arrow{
+    border: 1.4px solid #6c00bd;
+}
+
+/* Hover etkisinin yalnızca ok simgesine uygulanması */
+thead th:hover {
+    color: inherit; /* Başlık metni etkilenmez */
+}
+
+/* Aktif sıralama durumunda ok */
+thead th.active span.icon-arrow {
+    background-color: #6c00bd;
+    color: #fff;
+}
+
+/* Azalan sıralama okunun döndürülmesi */
+thead th.asc span.icon-arrow {
+    transform: rotate(180deg);
+}
+
+thead th.active,tbody td.active {
+    color: #6c00bd;
+}
+
+.export__file {
+    position: end;
+}
+
+.export__file .export__file-btn {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    background: #fff6 url(images/export.png) center / 80% no-repeat;
+    border-radius: 50%;
+    transition: .2s ease-in-out;
+}
+
+.export__file .export__file-btn:hover { 
+    background-color: #fff;
+    transform: scale(1.15);
+    cursor: pointer;
+}
+
+.export__file input {
+    display: none;
+}
+
+.export__file .export__file-options {
+    position: absolute;
+    right: 0;
+    
+    width: 12rem;
+    border-radius: .5rem;
+    overflow: hidden;
+    text-align: center;
+
+    opacity: 0;
+    transform: scale(.8);
+    transform-origin: top right;
+    
+    box-shadow: 0 .2rem .5rem #0004;
+    
+    transition: .2s;
+}
+
+.export__file input:checked + .export__file-options {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 100;
+}
+
+.export__file .export__file-options label{
+    display: block;
+    width: 100%;
+    padding: .6rem 0;
+    background-color: #f2f2f2;
+    
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    transition: .2s ease-in-out;
+}
+
+.export__file .export__file-options label:first-of-type{
+    padding: 1rem 0;
+    background-color: #86e49d !important;
+}
+
+.export__file .export__file-options label:hover{
+    transform: scale(1.05);
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.export__file .export__file-options img{
+    width: 2rem;
+    height: auto;
+}
+
+/*Accordion Table*/
+.panel-group .panel-heading + .panel-collapse > .panel-body {
+    border: 1px solid #ddd;
+  }
+  .panel-group,
+  .panel-group .panel,
+  .panel-group .panel-heading,
+  .panel-group .panel-heading a,
+  .panel-group .panel-title,
+  .panel-group .panel-title a,
+  .panel-group .panel-body,
+  .panel-group .panel-group .panel-heading + .panel-collapse > .panel-body {
+    border-radius: 2px;
+    border: 0;
+  }
+  .panel-group .panel-heading {
+    padding: 0;
+  }
+  .panel-group .panel-heading a {
+    display: block;
+    background: #668bb1;
+    color: #ffffff;
+    padding: 15px;
+    text-decoration: none;
+    position: relative;
+  }
+  .panel-group .panel-heading a.collapsed {
+    background: #eeeeee;
+    color: inherit;
+  }
+  .panel-group .panel-heading a:after {
+    content: '-';
+    position: absolute;
+    right: 20px;
+    top:5px;
+    font-size:30px;
+  }
+  .panel-group .panel-heading a.collapsed:after {
+    content: '+';
+  }
+  .panel-group .panel-collapse {
+    margin-top: 5px !important;
+  }
+  .panel-group .panel-body {
+    background: #ffffff;
+    padding: 15px;
+  }
+  .panel-group .panel {
+    background-color: transparent;
+  }
+  .panel-group .panel-body p:last-child,
+  .panel-group .panel-body ul:last-child,
+  .panel-group .panel-body ol:last-child {
+    margin-bottom: 0;
+  }
+  
+  .current_booking {
+    color:light-blue;
+  }
+  .new_booking {
+    color:green;
+  }
+  .cancel_booking {
+    color:red;
+  }
+
+  /* Accordion Table */
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .line-hidden-row  {
+    display: none; /* Satırları gizlemek için */
+  }
+
+
+
+  /* Mobilde metni kırp ve "..." ekle */
+  @media (max-width: 768px) {
+    .sinirli-column {
+      max-width: 150px;
+      /* Sütunun genişliği */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }

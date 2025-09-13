@@ -1,0 +1,201 @@
+﻿@page "/index2"
+@model CimaxWeb2.Pages.IndexModel
+@{
+    ViewData["Title"] = "CimaxWeb2 - Devices";
+}
+
+<style>
+    .cards-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        padding: .75rem;
+    }
+
+    .device-card {
+        flex: 0 0 calc(20% - .5rem);
+        max-width: calc(20% - .5rem);
+        position: relative;
+        border-radius: 1rem;
+        background-color: rgba(128,128,128,.459);
+    }
+
+    @@media (max-width:1600px) {
+        .device-card {
+            flex-basis: calc(25% - .5rem);
+            max-width: calc(25% - .5rem);
+        }
+    }
+
+    @@media (max-width:1200px) {
+        .device-card {
+            flex-basis: calc(33.333% - .5rem);
+            max-width: calc(33.333% - .5rem);
+        }
+    }
+
+    @@media (max-width:992px) {
+        .device-card {
+            flex-basis: calc(50% - .5rem);
+            max-width: calc(50% - .5rem);
+        }
+    }
+
+    @@media (max-width:576px) {
+        .device-card {
+            flex-basis: 100%;
+            max-width: 100%;
+        }
+    }
+
+    .device-card-large {
+        transform: scale(4); /* 5 kat büyüt */
+        transform-origin: top left; /* hangi noktadan büyüteceğini ayarlıyor */
+    }
+</style>
+
+<div class="w-100">
+    @if (Model.Cards?.Count > 0)
+    {
+        <div class="cards-grid">
+            @{
+                var renderedIps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
+            @foreach (var card in Model.Cards)
+            {
+                var ipTrim = card.Device?.Ip?.Trim() ?? "";
+                if (string.IsNullOrWhiteSpace(ipTrim)) { continue; }
+                if (renderedIps.Contains(ipTrim)) { continue; }
+                renderedIps.Add(ipTrim);
+
+                <div class="card device-card device-card-large">
+                    <!-- Overlay -->
+                    <img class="status-overlay"
+                         data-ip="@ipTrim"
+                         src="~/img/warning.png"
+                         alt="disconnect"
+                         style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;z-index:10;opacity:.70;display:@(card.Device.Status?.Equals("Disconnected", StringComparison.OrdinalIgnoreCase) == true ? "block" : "none");" />
+
+                    <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                        <div class="row g-0">
+                            <div class="col-8 d-flex align-items-center">
+                                <span style="color:white;">
+                                    <h1 style="font-size:1.2rem;margin:0;">
+                                        @(card.Device.Name ?? "(isimsiz cihaz)") - @card.Device.Location
+                                    </h1>
+                                </span>
+                            </div>
+                            <div class="col-2 d-flex justify-content-end ms-auto">
+                                <img class="device-icon"
+                                     data-ip="@ipTrim"
+                                     style="width:38px;height:38px;"
+                                     src="@Url.Content(card.IconPath)"
+                                     asp-append-version="true" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="background-color:#ebebeb;border-bottom-left-radius:1rem;border-bottom-right-radius:1rem;">
+                        <div class="row text-center">
+
+                            @{
+                                var cw = card.LatestEvent?.ColdWaterMeter;
+                                var coldActive = (cw?.Status == "1") || string.Equals(cw?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var coldIcon = Url.Content(coldActive ? "~/img/SuSayacSogukAktif.png" : "~/img/SuSayacSogukPasif.png");
+
+                                var hw = card.LatestEvent?.HotWaterMeter;
+                                var hotActive = (hw?.Status == "1") || string.Equals(hw?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var hotIcon = Url.Content(hotActive ? "~/img/SuSayacSicakAktif.png" : "~/img/SuSayacSicakPasif.png");
+
+                                var em = card.LatestEvent?.ElectricityMeter;
+                                var elecActive = (em?.Status == "1") || string.Equals(em?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var elecIcon = Url.Content(elecActive ? "~/img/ElektrikSayacAktif.png" : "~/img/ElektrikSayacPasif.png");
+
+                                var dg = card.LatestEvent?.Degree;
+                                var degActive = (dg?.Status == "1") || string.Equals(dg?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var degIcon = Url.Content(degActive ? "~/img/DereceAktif.png" : "~/img/DerecePasif.png");
+                                var degValue = dg?.Value ?? "-";
+
+                                var hm = card.LatestEvent?.Humidity;
+                                var humActive = (hm?.Status == "1") || string.Equals(hm?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var humIcon = Url.Content(humActive ? "~/img/NemAktif.png" : "~/img/NemPasif.png");
+                                var humValue = hm?.Value ?? "-";
+
+                                var laserIcon = Url.Content(((card.LatestEvent?.Laser ?? 0) == 1) ? "~/img/LazerAktif.png" : "~/img/LazerPasif.png");
+                                var soundIcon = Url.Content(((card.LatestEvent?.Sound ?? 0) == 1) ? "~/img/HoparlorAktif1.png" : "~/img/HoparlorPasif.png");
+                                var intercomIcon = Url.Content(((card.LatestEvent?.Intercom ?? 0) == 1) ? "~/img/InterkomAktif.png" : "~/img/InterkomPasif.png");
+                                var doorIcon = Url.Content(((card.LatestEvent?.Door ?? 0) == 1) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
+                            }
+
+                            <div style="width:20%;">
+                                <img src="@coldIcon" asp-append-version="true" style="height:48px;" data-role="cold-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem;" data-role="cold-consumed" data-ip="@ipTrim">@(cw?.Consumed ?? "-")</span>
+                            </div>
+
+                            <div style="width:20%;">
+                                <img src="@hotIcon" asp-append-version="true" style="height:48px;" data-role="hot-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem;" data-role="hot-consumed" data-ip="@ipTrim">@(hw?.Consumed ?? "-")</span>
+                            </div>
+
+                            <div style="width:20%;">
+                                <img src="@elecIcon" asp-append-version="true" style="height:48px;" data-role="elec-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem;" data-role="elec-consumption" data-ip="@ipTrim">@(em?.Consumption ?? "-")</span>
+                            </div>
+
+                            <div style="width:20%;">
+                                <img src="@degIcon" asp-append-version="true" style="height:48px;" data-role="degree-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem;" data-role="degree-value" data-ip="@ipTrim">@degValue</span>
+                            </div>
+
+                            <div style="width:20%;">
+                                <img src="@humIcon" asp-append-version="true" style="height:48px;" data-role="humidity-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem;" data-role="humidity-value" data-ip="@ipTrim">@humValue</span>
+                            </div>
+                        </div>
+
+                        <hr style="margin-top:.8rem;margin-bottom:.8rem;" />
+
+                        <div class="row text-center mb-1 mt-1">
+                            <div style="width:40%;">
+                                <img src="@laserIcon" asp-append-version="true" style="height:48px;" data-role="laser-icon" data-ip="@ipTrim" />
+                            </div>
+                            <div style="width:20%;">
+                                <img src="@soundIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="sound-icon" data-ip="@ipTrim" />
+                            </div>
+                            <div style="width:20%;">
+                                <img src="@intercomIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="intercom-icon" data-ip="@ipTrim" />
+                            </div>
+                            <div style="width:20%;">
+                                <img src="@doorIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="door-icon" data-ip="@ipTrim" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info px-3">Cihaz bulunamadı.</div>
+    }
+</div>
+
+<script>
+    const lastSeen = new Map();
+    const basePulseUrl = '@Url.Page(null, "Pulse")';
+
+    function buildPulseUrl() {
+        const u = new URL(basePulseUrl, window.location.origin);
+        u.searchParams.set('_', Date.now().toString());
+        return u.toString();
+    }
+
+    async function poll() { /* Index1 ile aynı içerik */ }
+    setInterval(poll, 2000);
+    poll();
+</script>

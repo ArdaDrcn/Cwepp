@@ -1,0 +1,40 @@
+.card {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
+    border-radius: 1rem;
+}
+
+.cardbtn {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
+    margin-bottom: .5rem;
+    border-radius: 1rem;
+    margin-top: .5rem;
+    background-color:rgb(239, 240, 247);
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.cardbtn img {
+    width: 32px;
+    margin-left: -0.55rem;
+    margin-top: -0.25rem;
+}
+
+.cardbody {
+    margin: 1%;
+}
+
+.cardbodyimage {
+    width: 18%;
+    text-align: center;
+}
+
+.cardbodytext {
+    width: 82%;
+    display: table;
+    font-size: .8rem;
+}
+
+.cardbodytextchild {
+    display: table-cell;
+    vertical-align: middle;
+}

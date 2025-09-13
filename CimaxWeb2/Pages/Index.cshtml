@@ -1,0 +1,327 @@
+﻿@page
+@model CimaxWeb2.Pages.IndexModel
+@{
+    ViewData["Title"] = "CimaxWeb2 - Devices";
+}
+
+<style>
+    .cards-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        padding: .75rem;
+    }
+
+    .device-card {
+        flex: 0 0 calc(20% - .5rem);
+        max-width: calc(20% - .5rem);
+        position: relative;
+        border-radius: 1rem;
+        background-color: rgba(128,128,128,.459);
+    }
+
+    @@media (max-width:1600px) {
+        .device-card {
+            flex-basis: calc(25% - .5rem);
+            max-width: calc(25% - .5rem);
+        }
+    }
+
+    @@media (max-width:1200px) {
+        .device-card {
+            flex-basis: calc(33.333% - .5rem);
+            max-width: calc(33.333% - .5rem);
+        }
+    }
+
+    @@media (max-width:992px) {
+        .device-card {
+            flex-basis: calc(50% - .5rem);
+            max-width: calc(50% - .5rem);
+        }
+    }
+
+    @@media (max-width:576px) {
+        .device-card {
+            flex-basis: 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+
+
+
+
+<div class="w-100">
+    @if (Model.Cards?.Count > 0)
+    {
+        <div class="cards-grid">
+            @{
+                var renderedIps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
+            @foreach (var card in Model.Cards)
+            {
+                var ipTrim = card.Device?.Ip?.Trim() ?? "";
+                if (string.IsNullOrWhiteSpace(ipTrim)) { continue; }
+                if (renderedIps.Contains(ipTrim)) { continue; }
+                renderedIps.Add(ipTrim);
+
+                <div class="card device-card">
+                    <!-- Overlay -->
+                    <img class="status-overlay"
+                         data-ip="@ipTrim"
+                         src="~/img/warning.png"
+                         alt="disconnect"
+                         style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;z-index:10;opacity:.70;display:@(card.Device.Status?.Equals("Disconnected", StringComparison.OrdinalIgnoreCase) == true ? "block" : "none");" />
+
+                    <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                        <div class="row g-0">
+                            <div class="col-8 d-flex align-items-center">
+                                <span style="color:white;">
+                                    <h1 style="font-size:1.2rem;margin:0;">
+                                        @(card.Device.Name ?? "(isimsiz cihaz)") - @card.Device.Location
+                                    </h1>
+                                </span>
+                            </div>
+                            <div class="col-2 d-flex justify-content-end ms-auto">
+                                <img class="device-icon"
+                                     data-ip="@ipTrim"
+                                     style="width:38px;height:38px;"
+                                     src="@Url.Content(card.IconPath)"
+                                     asp-append-version="true" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="background-color:#ebebeb;border-bottom-left-radius:1rem;border-bottom-right-radius:1rem;">
+                        <div class="row text-center">
+
+                            @{
+                                // Soğuk / Sıcak su
+                                var cw = card.LatestEvent?.ColdWaterMeter;
+                                var coldActive = (cw?.Status == "1") || string.Equals(cw?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var coldIcon = Url.Content(coldActive ? "~/img/SuSayacSogukAktif.png" : "~/img/SuSayacSogukPasif.png");
+
+                                var hw = card.LatestEvent?.HotWaterMeter;
+                                var hotActive = (hw?.Status == "1") || string.Equals(hw?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var hotIcon = Url.Content(hotActive ? "~/img/SuSayacSicakAktif.png" : "~/img/SuSayacSicakPasif.png");
+
+                                // Elektrik
+                                var em = card.LatestEvent?.ElectricityMeter;
+                                var elecActive = (em?.Status == "1") || string.Equals(em?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var elecIcon = Url.Content(elecActive ? "~/img/ElektrikSayacAktif.png" : "~/img/ElektrikSayacPasif.png");
+
+                                // Derece / Nem
+                                var dg = card.LatestEvent?.Degree;
+                                var degActive = (dg?.Status == "1") || string.Equals(dg?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var degIcon = Url.Content(degActive ? "~/img/DereceAktif.png" : "~/img/DerecePasif.png");
+                                var degValue = dg?.Value ?? "-";
+
+                                var hm = card.LatestEvent?.Humidity;
+                                var humActive = (hm?.Status == "1") || string.Equals(hm?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                                var humIcon = Url.Content(humActive ? "~/img/NemAktif.png" : "~/img/NemPasif.png");
+                                var humValue = hm?.Value ?? "-";
+
+                                // ---- YENİ: Laser / Sound / Intercom / Door (kendi ikonlarıyla) ----
+                                var laserIcon = Url.Content(((card.LatestEvent?.Laser ?? 0) == 1) ? "~/img/LazerAktif.png" : "~/img/LazerPasif.png");
+                                var soundIcon = Url.Content(((card.LatestEvent?.Sound ?? 0) == 1) ? "~/img/HoparlorAktif1.png" : "~/img/HoparlorPasif.png");
+                                var intercomIcon = Url.Content(((card.LatestEvent?.Intercom ?? 0) == 1) ? "~/img/InterkomAktif.png" : "~/img/InterkomPasif.png");
+                                var doorIcon = Url.Content(((card.LatestEvent?.Door ?? 0) == 1) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
+                            }
+
+                            <div style="width:20%;">
+                                <img src="@coldIcon" asp-append-version="true" style="height:48px;" data-role="cold-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem;" data-role="cold-consumed" data-ip="@ipTrim">@(cw?.Consumed ?? "-")</span>
+                            </div>
+
+                            <div style="width:20%;">
+                                <img src="@hotIcon" asp-append-version="true" style="height:48px;" data-role="hot-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem;" data-role="hot-consumed" data-ip="@ipTrim">@(hw?.Consumed ?? "-")</span>
+                            </div>
+
+                            <div style="width:20%;">
+                                <img src="@elecIcon" asp-append-version="true" style="height:48px;" data-role="elec-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem;" data-role="elec-consumption" data-ip="@ipTrim">@(em?.Consumption ?? "-")</span>
+                            </div>
+
+                            <div style="width:20%;">
+                                <img src="@degIcon" asp-append-version="true" style="height:48px;" data-role="degree-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary deg-wrap" style="width:3rem; white-space:nowrap;" data-ip="@ipTrim">
+                                    <span data-role="degree-value" data-ip="@ipTrim">@degValue</span><span aria-hidden="true">°</span>
+                                </span>
+                            </div>
+
+
+                            <div style="width:20%;">
+                                <img src="@humIcon" asp-append-version="true" style="height:48px;" data-role="humidity-icon" data-ip="@ipTrim" />
+                                <br />
+                                <span class="badge text-bg-primary" style="width:3rem; white-space:nowrap;" data-ip="@ipTrim">
+                                    <span aria-hidden="true">%</span><span data-role="humidity-value" data-ip="@ipTrim">@humValue</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <hr style="margin-top:.8rem;margin-bottom:.8rem;" />
+
+                        <div class="row text-center mb-1 mt-1">
+                            <div style="width:40%;">
+                                <!-- Laser -->
+                                <img src="@laserIcon" asp-append-version="true" style="height:48px;" data-role="laser-icon" data-ip="@ipTrim" />
+                            </div>
+                            <div style="width:20%;">
+                                <!-- Sound -->
+                                <img src="@soundIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="sound-icon" data-ip="@ipTrim" />
+                            </div>
+                            <div style="width:20%;">
+                                <!-- Intercom -->
+                                <img src="@intercomIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="intercom-icon" data-ip="@ipTrim" />
+                            </div>
+                            <div style="width:20%;">
+                                <!-- Door -->
+                                <img src="@doorIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="door-icon" data-ip="@ipTrim" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info px-3">Cihaz bulunamadı.</div>
+    }
+</div>
+
+<script>
+    const lastSeen = new Map();
+    const basePulseUrl = '@Url.Page("Index", "Pulse")';
+
+    function buildPulseUrl() {
+        const u = new URL(basePulseUrl, window.location.origin);
+        u.searchParams.set('_', Date.now().toString());
+        return u.toString();
+    }
+
+    async function poll() {
+        try {
+            const res = await fetch(buildPulseUrl(), { cache: 'no-store' });
+            if (!res.ok) return;
+            const data = await res.json();
+
+            for (const raw of data) {
+                const ip = (raw.ip || '').trim();
+                const ticks = raw.updatedAtTicks || 0;
+                const iconUrl = raw.iconUrl || '';
+                const showOverlay = !!raw.showOverlay;
+
+                // Overlay
+                let overlays = document.querySelectorAll(`img.status-overlay[data-ip="${ip}"]`);
+                if (overlays.length === 0) overlays = document.querySelectorAll('img.status-overlay[data-ip]');
+                overlays.forEach(ov => {
+                    const ovIp = (ov.getAttribute('data-ip') || '').trim();
+                    if (ovIp === ip) ov.style.display = showOverlay ? 'block' : 'none';
+                });
+
+                const prev = lastSeen.get(ip);
+                if (prev === undefined) {
+                    lastSeen.set(ip, ticks);
+                } else if (ticks !== prev) {
+                    // Ana ikon
+                    document.querySelectorAll(`img.device-icon[data-ip="${ip}"]`).forEach(img => {
+                        const url = new URL(iconUrl, window.location.origin);
+                        url.searchParams.set('v', String(ticks));
+                        img.src = url.toString();
+                    });
+
+                    // Soğuk
+                    const coldImg = document.querySelector(`img[data-role="cold-icon"][data-ip="${ip}"]`);
+                    if (coldImg && raw.coldIconUrl) {
+                        const u = new URL(raw.coldIconUrl, window.location.origin);
+                        u.searchParams.set('v', String(ticks));
+                        coldImg.src = u.toString();
+                    }
+                    const coldSpan = document.querySelector(`span[data-role="cold-consumed"][data-ip="${ip}"]`);
+                    if (coldSpan && ('coldConsumed' in raw)) coldSpan.textContent = (raw.coldConsumed ?? '-');
+
+                    // Sıcak
+                    const hotImg = document.querySelector(`img[data-role="hot-icon"][data-ip="${ip}"]`);
+                    if (hotImg && raw.hotIconUrl) {
+                        const u2 = new URL(raw.hotIconUrl, window.location.origin);
+                        u2.searchParams.set('v', String(ticks));
+                        hotImg.src = u2.toString();
+                    }
+                    const hotSpan = document.querySelector(`span[data-role="hot-consumed"][data-ip="${ip}"]`);
+                    if (hotSpan && ('hotConsumed' in raw)) hotSpan.textContent = (raw.hotConsumed ?? '-');
+
+                    // Elektrik
+                    const elecImg = document.querySelector(`img[data-role="elec-icon"][data-ip="${ip}"]`);
+                    if (elecImg && raw.elecIconUrl) {
+                        const u3 = new URL(raw.elecIconUrl, window.location.origin);
+                        u3.searchParams.set('v', String(ticks));
+                        elecImg.src = u3.toString();
+                    }
+                    const elecSpan = document.querySelector(`span[data-role="elec-consumption"][data-ip="${ip}"]`);
+                    if (elecSpan && ('elecConsumption' in raw)) elecSpan.textContent = (raw.elecConsumption ?? '-');
+
+                    // Derece
+                    const degImg = document.querySelector(`img[data-role="degree-icon"][data-ip="${ip}"]`);
+                    if (degImg && raw.degreeIconUrl) {
+                        const u4 = new URL(raw.degreeIconUrl, window.location.origin);
+                        u4.searchParams.set('v', String(ticks));
+                        degImg.src = u4.toString();
+                    }
+                    const degSpan = document.querySelector(`span[data-role="degree-value"][data-ip="${ip}"]`);
+                    if (degSpan && ('degreeValue' in raw)) degSpan.textContent = (raw.degreeValue ?? '-');
+
+                    // Nem
+                    const humImg = document.querySelector(`img[data-role="humidity-icon"][data-ip="${ip}"]`);
+                    if (humImg && raw.humidityIconUrl) {
+                        const u5 = new URL(raw.humidityIconUrl, window.location.origin);
+                        u5.searchParams.set('v', String(ticks));
+                        humImg.src = u5.toString();
+                    }
+                    const humSpan = document.querySelector(`span[data-role="humidity-value"][data-ip="${ip}"]`);
+                    if (humSpan && ('humidityValue' in raw)) humSpan.textContent = (raw.humidityValue ?? '-');
+
+                    // YENİ: Laser / Sound / Intercom / Door
+                    const laserImg = document.querySelector(`img[data-role="laser-icon"][data-ip="${ip}"]`);
+                    if (laserImg && raw.laserIconUrl) {
+                        const u6 = new URL(raw.laserIconUrl, window.location.origin);
+                        u6.searchParams.set('v', String(ticks));
+                        laserImg.src = u6.toString();
+                    }
+
+                    const soundImg = document.querySelector(`img[data-role="sound-icon"][data-ip="${ip}"]`);
+                    if (soundImg && raw.soundIconUrl) {
+                        const u7 = new URL(raw.soundIconUrl, window.location.origin);
+                        u7.searchParams.set('v', String(ticks));
+                        soundImg.src = u7.toString();
+                    }
+
+                    const intercomImg = document.querySelector(`img[data-role="intercom-icon"][data-ip="${ip}"]`);
+                    if (intercomImg && raw.intercomIconUrl) {
+                        const u8 = new URL(raw.intercomIconUrl, window.location.origin);
+                        u8.searchParams.set('v', String(ticks));
+                        intercomImg.src = u8.toString();
+                    }
+
+                    const doorImg = document.querySelector(`img[data-role="door-icon"][data-ip="${ip}"]`);
+                    if (doorImg && raw.doorIconUrl) {
+                        const u9 = new URL(raw.doorIconUrl, window.location.origin);
+                        u9.searchParams.set('v', String(ticks));
+                        doorImg.src = u9.toString();
+                    }
+
+                    lastSeen.set(ip, ticks);
+                }
+            }
+        } catch (e) { }
+    }
+
+    setInterval(poll, 2000);
+    poll();
+</script>
