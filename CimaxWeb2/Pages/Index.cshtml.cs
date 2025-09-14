@@ -88,28 +88,42 @@ public class IndexModel : PageModel
         Cards = list;
     }
 
-    // --- Ýkon yollarý ---
-    private static string IconPathFromEmergency(PrisonEvent? evt)
+    // --- Ýkon yollarý (PATH) ---
+    public static string IconPathFromEmergency(PrisonEvent? evt)
     {
         var code = (evt?.EmergencyCall ?? 0) == 1 ? 1 : 0;
         return code == 1 ? "~/img/GardiyanAktifGif.gif" : "~/img/AcilCagriPasif.png";
     }
-    private static string IconPathFromDoor(PrisonEvent? evt)
+
+    public static string IconPathFromDoor(PrisonEvent? evt)
     {
         var code = (evt?.Door ?? 0) == 1 ? 1 : 0;
         return code == 1 ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png";
     }
-    private static string IconPathFromSound(PrisonEvent? evt)
+
+    // 0–5 mapping: dosya adlarý projendeki gerçek isimlerle eþleþmelidir
+    public static string IconPathFromSound(PrisonEvent? evt)
     {
-        var code = (evt?.Sound ?? 0) == 1 ? 1 : 0;
-        return code == 1 ? "~/img/HoparlorAktif1.png" : "~/img/HoparlorPasif.png";
+        var code = evt?.Sound ?? 0;
+        return code switch
+        {
+            0 => "~/img/HoparlorKopuk.png",   // istersen Pasif yapabilirsin
+            1 => "~/img/HoparlorPasif.png",
+            2 => "~/img/HoparlorAktif1.png",
+            3 => "~/img/HoparlorAktif2.png",
+            4 => "~/img/HoparlorAktif3.png",
+            5 => "~/img/HoparlorAktif4.png",
+            _ => "~/img/HoparlorKopuk.png"
+        };
     }
-    private static string IconPathFromIntercom(PrisonEvent? evt)
+
+    public static string IconPathFromIntercom(PrisonEvent? evt)
     {
         var code = (evt?.Intercom ?? 0) == 1 ? 1 : 0;
         return code == 1 ? "~/img/InterkomAktif.png" : "~/img/InterkomPasif.png";
     }
-    private static string IconPathFromLaser(PrisonEvent? evt)
+
+    public static string IconPathFromLaser(PrisonEvent? evt)
     {
         var code = (evt?.Laser ?? 0) == 1 ? 1 : 0;
         return code == 1 ? "~/img/LazerAktif.png" : "~/img/LazerPasif.png";
@@ -141,6 +155,13 @@ public class IndexModel : PageModel
 
     private static string IconPathForHumidity(HumiditySensor m) =>
         IsActive(m.Status) ? "~/img/NemAktif.png" : "~/img/NemPasif.png";
+
+    // --- URL döndüren convenience yardýmcýlar (View'da kullanýyoruz) ---
+    public string EmergencyIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromEmergency(evt));
+    public string DoorIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromDoor(evt));
+    public string SoundIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromSound(evt));
+    public string IntercomIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromIntercom(evt));
+    public string LaserIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromLaser(evt));
 
     // --- PULSE DTO ---
     public record CardPulseDto(

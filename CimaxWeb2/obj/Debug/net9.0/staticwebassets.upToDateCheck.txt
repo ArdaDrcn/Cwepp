@@ -4,6 +4,7 @@ wwwroot\css\sidebarstyle.css
 wwwroot\css\site.css
 wwwroot\css\tablestyle.css
 wwwroot\favicon.ico
+wwwroot\fonts\MarkPro\MarkPro.ttf
 wwwroot\img\AcilCagriAktif.png
 wwwroot\img\AcilCagriKopuk.png
 wwwroot\img\AcilCagriPasif.png

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CimaxWeb2.styles.css" asp-append-version="true" />
+    <link rel="preload" href="@(Url.Content("~/fonts/MarkPro/MarkPro.ttf"))" as="font" type="font/ttf" crossorigin>
     <style>
         /* Tam genişlik için varsayılan boşlukları kapat */
         html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
@@ -42,9 +43,9 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 ms-3">
-                        @* <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index1">Home</a>
-                        </li> *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Anasayfa</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index2">Tekli Göster</a>
                         </li>

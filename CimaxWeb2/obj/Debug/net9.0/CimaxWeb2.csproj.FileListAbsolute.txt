@@ -351,7 +351,6 @@ C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debu
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\compressed\szss4151g2-0sjctxnunb.gz
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\compressed\n2id0vmt5s-zx83kixwtg.gz
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\compressed\dsb6lzd118-g68wnriqq2.gz
-C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\compressed\ma9b1k54mc-b9sayid5wm.gz
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\compressed\ifh7khz7gh-0972j4xc7f.gz
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\compressed\7mrltnwleh-61n19gt1b8.gz
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\compressed\qcu3lq7a2q-xtxxf3hu2r.gz
@@ -427,3 +426,4 @@ C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debu
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\CimaxWeb2.pdb
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\CimaxWeb2.genruntimeconfig.cache
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\ref\CimaxWeb2.dll
+C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\obj\Debug\net9.0\compressed\ma9b1k54mc-2fdc58thqi.gz
