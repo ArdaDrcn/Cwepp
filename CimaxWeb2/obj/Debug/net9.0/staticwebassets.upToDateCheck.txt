@@ -9,11 +9,12 @@ wwwroot\img\AcilCagriKopuk.png
 wwwroot\img\AcilCagriPasif.png
 wwwroot\img\Cimax.png
 wwwroot\img\DereceAktif.png
-wwwroot\img\DereceKopuk.png
 wwwroot\img\DerecePasif.png
+wwwroot\img\DerecePasif2.png
 wwwroot\img\ElektrikSayacAktif.png
-wwwroot\img\ElektrikSayacKopuk.png
+wwwroot\img\ElektrikSayacPasif.png
 wwwroot\img\filter.png
+wwwroot\img\GardiyanAktifGif - Eski.gif
 wwwroot\img\GardiyanAktifGif.gif
 wwwroot\img\GirisKapiAktif.png
 wwwroot\img\GirisKapiKopuk.png
@@ -30,17 +31,17 @@ wwwroot\img\InterkomPasif.png
 wwwroot\img\LazerAktif.png
 wwwroot\img\LazerPasif.png
 wwwroot\img\NemAktif.png
-wwwroot\img\NemKopuk.png
 wwwroot\img\NemPasif.png
+wwwroot\img\NemPasif2.png
 wwwroot\img\SirenAktif.png
 wwwroot\img\SirenAlarm.png
 wwwroot\img\SirenPasif.png
 wwwroot\img\SuSayacSicakAktif.png
-wwwroot\img\SuSayacSicakKopuk.png
+wwwroot\img\SuSayacSicakPasif.png
+wwwroot\img\SuSayacSicakPasif2.png
 wwwroot\img\SuSayacSogukAktif.png
-wwwroot\img\SuSayacSogukKopuk.png
-wwwroot\img\SuSayacSıcakPasif.png
-wwwroot\img\SuSayaçcSogukPasif.png
+wwwroot\img\SuSayacSogukPasif.png
+wwwroot\img\SuSayacSogukPasif2.png
 wwwroot\img\warning.png
 wwwroot\img\YanginAktif.png
 wwwroot\img\YanginKopuk.png

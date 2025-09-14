@@ -99,32 +99,49 @@
 </style>
 
 <!-- ===== FİLTRE ÇUBUĞU ===== -->
-<div id="filter-bar" class="filter-bar" hidden
-     style="margin-bottom:1rem; background:#fff3cd; border:1px solid #f0ad4e; padding:.75rem; border-radius:.5rem;">
-    <label for="filter-role">İkon:</label>
-    <select id="filter-role">
-        <option value="laser">Lazer Sensörü</option>
-        <option value="sound">Ses / Hoparlör</option>
-        <option value="intercom">İnterkom</option>
-        <option value="door">Kapı</option>
-        <option value="device">Acil Çağrı</option>
-        <option value="cold">Soğuk Su Sayacı</option>
-        <option value="hot">Sıcak Su Sayacı</option>
-        <option value="elec">Elektrik Sayacı</option>
-        <option value="degree">Sıcaklık Sensörü</option>
-        <option value="humidity">Nem Sensörü</option>
-    </select>
+<div id="filter-bar" hidden style="padding:0.5rem; background:#f8f9fa; border-bottom:1px solid #ccc;">
+    <!-- Blok Filtresi -->
+    <div style="margin-bottom:0.5rem;">
+        <label for="block-filter" class="me-2">Blok Seç:</label>
+        <select id="block-filter">
+            <option value="">(Tümü)</option>
+            @foreach (var card in Model.Cards.Where(c => !string.IsNullOrWhiteSpace(c.Device?.Name))
+                        .Select(c => c.Device!.Name).Distinct())
+            {
+                <option value="@card">@card</option>
+            }
+        </select>
+        <button id="apply-block" class="btn btn-sm btn-primary ms-2">Uygula</button>
+        <button id="clear-block" class="btn btn-sm btn-secondary ms-1">Temizle</button>
+    </div>
 
-    <label for="filter-state" style="margin-left:1rem;">Durum:</label>
-    <select id="filter-state">
-        <option value="2">Alarm Durumu</option>
-        <option value="1" selected>Aktif (Çalışıyor)</option>
-        <option value="0">Pasif (Kapalı)</option>
-    </select>
+    <!-- Mevcut ikon filtreleri burada -->
+    <div style="margin-bottom:0.5rem;">
+        <label for="filter-role" class="me-2">İkon Türü:</label>
+        <select id="filter-role">
+            <option value="laser">Lazer</option>
+            <option value="sound">Ses</option>
+            <option value="intercom">İnterkom</option>
+            <option value="door">Kapı</option>
+            <option value="device">Cihaz</option>
+            <option value="cold">Soğuk Su</option>
+            <option value="hot">Sıcak Su</option>
+            <option value="elec">Elektrik</option>
+            <option value="degree">Derece</option>
+            <option value="humidity">Nem</option>
+        </select>
 
-    <button type="button" id="apply-filter" style="margin-left:1rem;">Uygula</button>
-    <button type="button" id="clear-filter">Temizle</button>
-</div>
+        <label for="filter-state" class="ms-3 me-2">Durum:</label>
+        <select id="filter-state">
+            <option value="2">Alarm</option>
+            <option value="1">Aktif</option>
+            <option value="0">Pasif</option>
+        </select>
+
+        <button id="apply-filter" class="btn btn-sm btn-primary ms-2">Uygula</button>
+        <button id="clear-filter" class="btn btn-sm btn-secondary ms-1">Temizle</button>
+    </div>
+</div>  
 
 
 
@@ -520,4 +537,44 @@
 
     setInterval(poll, 2000);
     poll();
+
+
+     // === BLOK FİLTRESİ ===
+    let currentBlock = null; // aktif blok filtresi
+
+    function applyBlockFilter(blockName) {
+        const cards = document.querySelectorAll('.device-card');
+        cards.forEach(card => {
+            const header = card.querySelector('.card-header h1');
+            const devName = header ? header.textContent.trim() : '';
+            if (!blockName || blockName === '') {
+                card.style.display = ''; // tümünü göster
+            } else {
+                card.style.display = devName.includes(blockName) ? '' : 'none';
+            }
+        });
+    }
+
+    function clearBlockFilter() {
+        currentBlock = null;
+        const cards = document.querySelectorAll('.device-card');
+        cards.forEach(card => card.style.display = '');
+        document.getElementById('block-filter').value = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnApplyBlock = document.getElementById('apply-block');
+        const btnClearBlock = document.getElementById('clear-block');
+        const blockSel = document.getElementById('block-filter');
+
+        btnApplyBlock && btnApplyBlock.addEventListener('click', () => {
+            const blockName = blockSel.value;
+            currentBlock = blockName;
+            applyBlockFilter(blockName);
+        });
+
+        btnClearBlock && btnClearBlock.addEventListener('click', () => {
+            clearBlockFilter();
+        });
+    });
 </script>
