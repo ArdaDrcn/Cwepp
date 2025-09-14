@@ -48,7 +48,6 @@
         }
     }
 
-    /* --- Filtre çubuğu --- */
     .filter-bar {
         display: flex;
         gap: .5rem;
@@ -58,6 +57,7 @@
         background: #f6f7fb;
         border-radius: .75rem;
         border: 1px solid rgba(0,0,0,.06);
+        flex-wrap: wrap;
     }
 
         .filter-bar label {
@@ -75,7 +75,7 @@
             padding: .4rem .75rem;
             border-radius: .5rem;
             border: 1px solid #ddd;
-            background: white;
+            background: #fff;
             cursor: pointer;
         }
 
@@ -87,15 +87,11 @@
         display: none !important;
     }
 
-    .filter-toggle-wrap {
-        display: flex;
-        justify-content: flex-end;
-        gap: .5rem;
-        padding: .25rem .75rem;
-        margin-bottom: .25rem;
+    /* Kopuk (overlay aktif) kartları görsel olarak PASİF göster */
+    .device-card[data-disconnected="true"] .card-header,
+    .device-card[data-disconnected="true"] .card-body {
+        filter: grayscale(100%) opacity(.55);
     }
-
-    
 </style>
 
 <!-- ===== FİLTRE ÇUBUĞU ===== -->
@@ -115,15 +111,16 @@
         <button id="clear-block" class="btn btn-sm btn-secondary ms-1">Temizle</button>
     </div>
 
-    <!-- Mevcut ikon filtreleri burada -->
+    <!-- İkon Türü + Durum -->
     <div style="margin-bottom:0.5rem;">
         <label for="filter-role" class="me-2">İkon Türü:</label>
         <select id="filter-role">
+            <option value="ots">OTS</option>
             <option value="laser">Lazer</option>
             <option value="sound">Ses</option>
             <option value="intercom">İnterkom</option>
             <option value="door">Kapı</option>
-            <option value="device">Cihaz</option>
+            <option value="device">Acil Çağrı</option>
             <option value="cold">Soğuk Su</option>
             <option value="hot">Sıcak Su</option>
             <option value="elec">Elektrik</option>
@@ -135,15 +132,13 @@
         <select id="filter-state">
             <option value="2">Alarm</option>
             <option value="1">Aktif</option>
-            <option value="0">Pasif</option>
+            <option value="0" selected>Pasif</option>
         </select>
 
         <button id="apply-filter" class="btn btn-sm btn-primary ms-2">Uygula</button>
         <button id="clear-filter" class="btn btn-sm btn-secondary ms-1">Temizle</button>
     </div>
-</div>  
-
-
+</div>
 
 <div class="w-100">
     @if (Model.Cards?.Count > 0)
@@ -159,13 +154,15 @@
                 if (renderedIps.Contains(ipTrim)) { continue; }
                 renderedIps.Add(ipTrim);
 
-                <div class="card device-card">
+                var isDisc = card.Device?.Status?.Equals("Disconnected", StringComparison.OrdinalIgnoreCase) == true;
+
+                <div class="card device-card" data-disconnected="@(isDisc.ToString().ToLower())">
                     <!-- Overlay -->
                     <img class="status-overlay"
                          data-ip="@ipTrim"
                          src="~/img/warning.png"
                          alt="disconnect"
-                         style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;z-index:10;opacity:.70;display:@(card.Device.Status?.Equals("Disconnected", StringComparison.OrdinalIgnoreCase) == true ? "block" : "none");" />
+                         style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;z-index:10;opacity:.70;display:@(isDisc ? "block" : "none");" />
 
                     <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
                         <div class="row g-0">
@@ -177,7 +174,7 @@
                                 </span>
                             </div>
                             <div class="col-2 d-flex justify-content-end ms-auto">
-                                <img class="device-icon"
+                                <img class="device-icon" title="Acil Çağrı"
                                      data-ip="@ipTrim"
                                      style="width:38px;height:38px;"
                                      src="@Url.Content(card.IconPath)"
@@ -215,32 +212,32 @@
                                 var humIcon = Url.Content(humActive ? "~/img/NemAktif.png" : "~/img/NemPasif.png");
                                 var humValue = hm?.Value ?? "-";
 
-                                // ---- YENİ: Laser / Sound / Intercom / Door (kendi ikonlarıyla) ----
+                                // Laser / Sound / Intercom / Door
                                 var laserIcon = Url.Content(((card.LatestEvent?.Laser ?? 0) == 1) ? "~/img/LazerAktif.png" : "~/img/LazerPasif.png");
                                 var soundIcon = Url.Content(((card.LatestEvent?.Sound ?? 0) == 1) ? "~/img/HoparlorAktif1.png" : "~/img/HoparlorPasif.png");
                                 var intercomIcon = Url.Content(((card.LatestEvent?.Intercom ?? 0) == 1) ? "~/img/InterkomAktif.png" : "~/img/InterkomPasif.png");
                                 var doorIcon = Url.Content(((card.LatestEvent?.Door ?? 0) == 1) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
                             }
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Soğuk Su Sayaç">
                                 <img src="@coldIcon" asp-append-version="true" style="height:48px;" data-role="cold-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem;" data-role="cold-consumed" data-ip="@ipTrim">@(cw?.Consumed ?? "-")</span>
                             </div>
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Sıcak Su Sayaç">
                                 <img src="@hotIcon" asp-append-version="true" style="height:48px;" data-role="hot-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem;" data-role="hot-consumed" data-ip="@ipTrim">@(hw?.Consumed ?? "-")</span>
                             </div>
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Elektrik Sayacı">
                                 <img src="@elecIcon" asp-append-version="true" style="height:48px;" data-role="elec-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem;" data-role="elec-consumption" data-ip="@ipTrim">@(em?.Consumption ?? "-")</span>
                             </div>
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Sıcaklık">
                                 <img src="@degIcon" asp-append-version="true" style="height:48px;" data-role="degree-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary deg-wrap" style="width:3rem; white-space:nowrap;" data-ip="@ipTrim">
@@ -248,7 +245,7 @@
                                 </span>
                             </div>
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Nem">
                                 <img src="@humIcon" asp-append-version="true" style="height:48px;" data-role="humidity-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem; white-space:nowrap;" data-ip="@ipTrim">
@@ -260,19 +257,19 @@
                         <hr style="margin-top:.8rem;margin-bottom:.8rem;" />
 
                         <div class="row text-center mb-1 mt-1">
-                            <div style="width:40%;">
+                            <div style="width:40%;" title="Lazer Sistemi">
                                 <!-- Laser -->
                                 <img src="@laserIcon" asp-append-version="true" style="height:48px;" data-role="laser-icon" data-ip="@ipTrim" />
                             </div>
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Ses Yayın">
                                 <!-- Sound -->
                                 <img src="@soundIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="sound-icon" data-ip="@ipTrim" />
                             </div>
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="İnterkom">
                                 <!-- Intercom -->
                                 <img src="@intercomIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="intercom-icon" data-ip="@ipTrim" />
                             </div>
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Kapı">
                                 <!-- Door -->
                                 <img src="@doorIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="door-icon" data-ip="@ipTrim" />
                             </div>
@@ -293,27 +290,27 @@
     const lastSeen = new Map();
     const basePulseUrl = '@Url.Page("Index", "Pulse")';
 
-    // Seçili filtre (yoksa null)
-    let currentSort = null; // { roleKey: string, target: number } | null
+    // currentSort: roleKey (string|null), target (number), discFirst (bool)
+    let currentSort = null;
 
-    // === FİLTRELEME & SIRALAMA ===
-    // Durum haritalaması: Alarm=2, Aktif=1, Pasif=0
+    // === Yardımcılar ===
     function stateFromSrc(img) {
         if (!img) return 0;
         const src = (img.getAttribute('src') || '').toLowerCase();
         if (src.includes('alarm')) return 2;
         if (src.includes('aktif')) return 1;
         if (src.includes('pasif')) return 0;
-        return 0; // bilinmiyorsa pasif say
+        return 0;
     }
 
     function imgForRole(cardEl, roleKey) {
         switch (roleKey) {
+            case 'ots':      // OTS özel rol -> ana cihaz ikonu üzerinden okunacaksa "device-icon"
+            case 'device':   return cardEl.querySelector('img.device-icon');
             case 'laser':    return cardEl.querySelector('img[data-role="laser-icon"]');
             case 'sound':    return cardEl.querySelector('img[data-role="sound-icon"]');
             case 'intercom': return cardEl.querySelector('img[data-role="intercom-icon"]');
             case 'door':     return cardEl.querySelector('img[data-role="door-icon"]');
-            case 'device':   return cardEl.querySelector('img.device-icon');
             case 'cold':     return cardEl.querySelector('img[data-role="cold-icon"]');
             case 'hot':      return cardEl.querySelector('img[data-role="hot-icon"]');
             case 'elec':     return cardEl.querySelector('img[data-role="elec-icon"]');
@@ -328,32 +325,40 @@
         return stateFromSrc(img);
     }
 
-    function sortCardsBy(roleKey, target) {
+    function isDisconnected(cardEl) {
+        return (cardEl.getAttribute('data-disconnected') || 'false') === 'true';
+    }
+
+    // === Sıralama ===
+    function sortByRoleAndState(roleKey, target, discFirst = false) {
         const grid = document.querySelector('.cards-grid');
         if (!grid) return;
 
         const cards = Array.from(grid.querySelectorAll('.device-card'));
-        const withState = cards.map((el) => ({
+        const list = cards.map((el) => ({
             el,
             orig: Number(el.getAttribute('data-original-index') ?? '0'),
-            val: getStateForRole(el, roleKey) // 0/1/2
+            val: getStateForRole(el, roleKey),    // 0/1/2
+            disc: isDisconnected(el) ? 1 : 0
         }));
 
-        // Hedef değer (target) üstte; eşitlikte Alarm>Aktif>Pasif; sonra orijinal sıra
-        withState.sort((a, b) => {
+        list.sort((a, b) => {
+            if (discFirst && a.disc !== b.disc) return b.disc - a.disc; // kopuklar önce
+
+            // Hedef değer üstte; eşitlikte Alarm>Aktif>Pasif; sonra orijinal sıra
             const aMatch = (a.val === target) ? 1 : 0;
             const bMatch = (b.val === target) ? 1 : 0;
-            if (aMatch !== bMatch) return bMatch - aMatch; // hedef önce
+            if (aMatch !== bMatch) return bMatch - aMatch;
             if (a.val !== b.val)   return b.val - a.val;   // 2>1>0
             return a.orig - b.orig;
         });
 
-        withState.forEach(x => grid.appendChild(x.el));
+        list.forEach(x => grid.appendChild(x.el));
     }
 
     function reapplySortIfAny() {
-        if (currentSort && currentSort.roleKey) {
-            sortCardsBy(currentSort.roleKey, currentSort.target);
+        if (currentSort) {
+            sortByRoleAndState(currentSort.roleKey, currentSort.target, currentSort.discFirst);
         }
     }
 
@@ -366,7 +371,6 @@
                  .forEach((el, idx) => el.setAttribute('data-original-index', String(idx)));
         }
 
-        // Filtre kontrolleri
         const roleSel  = document.getElementById('filter-role');
         const stateSel = document.getElementById('filter-state');
         const btnApply = document.getElementById('apply-filter');
@@ -375,8 +379,12 @@
         btnApply && btnApply.addEventListener('click', () => {
             const roleKey = (roleSel && roleSel.value) ? roleSel.value : 'laser';
             const target = Number(stateSel && stateSel.value ? stateSel.value : 1); // 2/1/0
-            currentSort = { roleKey, target };
-            sortCardsBy(roleKey, target);
+
+            // ÖZEL KURAL: İkon Türü = OTS VE Durum = Pasif ise kopuk cihazlar başa
+            const discFirst = (roleKey === 'ots' && target === 0);
+
+            currentSort = { roleKey, target, discFirst };
+            sortByRoleAndState(roleKey, target, discFirst);
         });
 
         btnClear && btnClear.addEventListener('click', () => {
@@ -391,7 +399,7 @@
             cards.forEach(c => grid2.appendChild(c));
         });
 
-        // Filtre bar toggle (ikonlu buton, text değiştirmiyor)
+        // Filtre bar toggle (varsa)
         const toggleBtn = document.getElementById('toggle-filter');
         const filterBar = document.getElementById('filter-bar');
         if (toggleBtn && filterBar) {
@@ -408,7 +416,7 @@
         }
     });
 
-    // === POLL (MEVCUT) ===
+    // === PULSE ===
     function buildPulseUrl() {
         const u = new URL(basePulseUrl, window.location.origin);
         u.searchParams.set('_', Date.now().toString());
@@ -427,109 +435,67 @@
                 const iconUrl = raw.iconUrl || '';
                 const showOverlay = !!raw.showOverlay;
 
-                // Overlay
+                // Overlay ve data-disconnected güncelle
                 let overlays = document.querySelectorAll(`img.status-overlay[data-ip="${ip}"]`);
                 if (overlays.length === 0) overlays = document.querySelectorAll('img.status-overlay[data-ip]');
                 overlays.forEach(ov => {
                     const ovIp = (ov.getAttribute('data-ip') || '').trim();
-                    if (ovIp === ip) ov.style.display = showOverlay ? 'block' : 'none';
+                    if (ovIp === ip) {
+                        ov.style.display = showOverlay ? 'block' : 'none';
+                        const card = ov.closest('.device-card');
+                        if (card) card.setAttribute('data-disconnected', showOverlay ? 'true' : 'false');
+                    }
                 });
 
                 const prev = lastSeen.get(ip);
                 if (prev === undefined) {
                     lastSeen.set(ip, ticks);
                 } else if (ticks !== prev) {
-                    // Ana ikon
                     document.querySelectorAll(`img.device-icon[data-ip="${ip}"]`).forEach(img => {
                         const url = new URL(iconUrl, window.location.origin);
                         url.searchParams.set('v', String(ticks));
                         img.src = url.toString();
                     });
 
-                    // Soğuk
-                    const coldImg = document.querySelector(`img[data-role="cold-icon"][data-ip="${ip}"]`);
-                    if (coldImg && raw.coldIconUrl) {
-                        const u = new URL(raw.coldIconUrl, window.location.origin);
-                        u.searchParams.set('v', String(ticks));
-                        coldImg.src = u.toString();
-                    }
+                    const updateImg = (sel, urlProp) => {
+                        const el = document.querySelector(`${sel}[data-ip="${ip}"]`);
+                        if (el && raw[urlProp]) {
+                            const u = new URL(raw[urlProp], window.location.origin);
+                            u.searchParams.set('v', String(ticks));
+                            el.src = u.toString();
+                        }
+                    };
+
+                    updateImg('img[data-role="cold-icon"]', 'coldIconUrl');
                     const coldSpan = document.querySelector(`span[data-role="cold-consumed"][data-ip="${ip}"]`);
                     if (coldSpan && ('coldConsumed' in raw)) coldSpan.textContent = (raw.coldConsumed ?? '-');
 
-                    // Sıcak
-                    const hotImg = document.querySelector(`img[data-role="hot-icon"][data-ip="${ip}"]`);
-                    if (hotImg && raw.hotIconUrl) {
-                        const u2 = new URL(raw.hotIconUrl, window.location.origin);
-                        u2.searchParams.set('v', String(ticks));
-                        hotImg.src = u2.toString();
-                    }
+                    updateImg('img[data-role="hot-icon"]', 'hotIconUrl');
                     const hotSpan = document.querySelector(`span[data-role="hot-consumed"][data-ip="${ip}"]`);
                     if (hotSpan && ('hotConsumed' in raw)) hotSpan.textContent = (raw.hotConsumed ?? '-');
 
-                    // Elektrik
-                    const elecImg = document.querySelector(`img[data-role="elec-icon"][data-ip="${ip}"]`);
-                    if (elecImg && raw.elecIconUrl) {
-                        const u3 = new URL(raw.elecIconUrl, window.location.origin);
-                        u3.searchParams.set('v', String(ticks));
-                        elecImg.src = u3.toString();
-                    }
+                    updateImg('img[data-role="elec-icon"]', 'elecIconUrl');
                     const elecSpan = document.querySelector(`span[data-role="elec-consumption"][data-ip="${ip}"]`);
                     if (elecSpan && ('elecConsumption' in raw)) elecSpan.textContent = (raw.elecConsumption ?? '-');
 
-                    // Derece
-                    const degImg = document.querySelector(`img[data-role="degree-icon"][data-ip="${ip}"]`);
-                    if (degImg && raw.degreeIconUrl) {
-                        const u4 = new URL(raw.degreeIconUrl, window.location.origin);
-                        u4.searchParams.set('v', String(ticks));
-                        degImg.src = u4.toString();
-                    }
+                    updateImg('img[data-role="degree-icon"]', 'degreeIconUrl');
                     const degSpan = document.querySelector(`span[data-role="degree-value"][data-ip="${ip}"]`);
                     if (degSpan && ('degreeValue' in raw)) degSpan.textContent = (raw.degreeValue ?? '-');
 
-                    // Nem
-                    const humImg = document.querySelector(`img[data-role="humidity-icon"][data-ip="${ip}"]`);
-                    if (humImg && raw.humidityIconUrl) {
-                        const u5 = new URL(raw.humidityIconUrl, window.location.origin);
-                        u5.searchParams.set('v', String(ticks));
-                        humImg.src = u5.toString();
-                    }
+                    updateImg('img[data-role="humidity-icon"]', 'humidityIconUrl');
                     const humSpan = document.querySelector(`span[data-role="humidity-value"][data-ip="${ip}"]`);
                     if (humSpan && ('humidityValue' in raw)) humSpan.textContent = (raw.humidityValue ?? '-');
 
-                    // Laser / Sound / Intercom / Door
-                    const laserImg = document.querySelector(`img[data-role="laser-icon"][data-ip="${ip}"]`);
-                    if (laserImg && raw.laserIconUrl) {
-                        const u6 = new URL(raw.laserIconUrl, window.location.origin);
-                        u6.searchParams.set('v', String(ticks));
-                        laserImg.src = u6.toString();
-                    }
-
-                    const soundImg = document.querySelector(`img[data-role="sound-icon"][data-ip="${ip}"]`);
-                    if (soundImg && raw.soundIconUrl) {
-                        const u7 = new URL(raw.soundIconUrl, window.location.origin);
-                        u7.searchParams.set('v', String(ticks));
-                        soundImg.src = u7.toString();
-                    }
-
-                    const intercomImg = document.querySelector(`img[data-role="intercom-icon"][data-ip="${ip}"]`);
-                    if (intercomImg && raw.intercomIconUrl) {
-                        const u8 = new URL(raw.intercomIconUrl, window.location.origin);
-                        u8.searchParams.set('v', String(ticks));
-                        intercomImg.src = u8.toString();
-                    }
-
-                    const doorImg = document.querySelector(`img[data-role="door-icon"][data-ip="${ip}"]`);
-                    if (doorImg && raw.doorIconUrl) {
-                        const u9 = new URL(raw.doorIconUrl, window.location.origin);
-                        u9.searchParams.set('v', String(ticks));
-                        doorImg.src = u9.toString();
-                    }
+                    updateImg('img[data-role="laser-icon"]', 'laserIconUrl');
+                    updateImg('img[data-role="sound-icon"]', 'soundIconUrl');
+                    updateImg('img[data-role="intercom-icon"]', 'intercomIconUrl');
+                    updateImg('img[data-role="door-icon"]', 'doorIconUrl');
 
                     lastSeen.set(ip, ticks);
                 }
             }
 
-            // Yeni veriler işlendi: varsa filtreyi tekrar uygula
+            // Varsa seçili sıralamayı yeniden uygula
             reapplySortIfAny();
 
         } catch (e) { /* sessizce yut */ }
@@ -538,9 +504,8 @@
     setInterval(poll, 2000);
     poll();
 
-
-     // === BLOK FİLTRESİ ===
-    let currentBlock = null; // aktif blok filtresi
+    // === BLOK FİLTRESİ ===
+    let currentBlock = null;
 
     function applyBlockFilter(blockName) {
         const cards = document.querySelectorAll('.device-card');
@@ -548,7 +513,7 @@
             const header = card.querySelector('.card-header h1');
             const devName = header ? header.textContent.trim() : '';
             if (!blockName || blockName === '') {
-                card.style.display = ''; // tümünü göster
+                card.style.display = '';
             } else {
                 card.style.display = devName.includes(blockName) ? '' : 'none';
             }

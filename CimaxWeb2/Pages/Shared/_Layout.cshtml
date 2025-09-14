@@ -33,14 +33,17 @@
 </head>
 <body class="m-0 p-0">
     <header>
-        <!-- container yerine container-fluid + px-0: kenar boşluklarını kaldırır -->
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-0">
-            <div class="container-fluid px-0">
-                <a class="navbar-brand ms-3" asp-area="" asp-page="/Index"><img src="~/img/Cimax.png" height="30px"/></a>
+            <div class="container-fluid px-0 position-relative">
+                <a class="navbar-brand ms-3" asp-area="" asp-page="/Index">
+                    <img src="~/img/Cimax.png" height="30px" />
+                </a>
+
                 <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 ms-3">
                         <li class="nav-item">
@@ -51,16 +54,22 @@
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div class="filter-toggle-wrap">
-                <button id="toggle-filter"
-                        class="filter-toggle-btn"
-                        aria-controls="filter-bar"
-                        aria-expanded="false">
-                    <img src="~/img/filter.png" alt="Filtreler" style="width:20px; height:20px;">
-                </button>
+
+                <!-- Tam ortaya sabitlenen başlık -->
+                <h2 class="m-0 position-absolute start-50 translate-middle-x text-center text-truncate"
+                    style="max-width: 60%;">
+                    Mumcular S Tipi Kapalı Cezaevi
+                </h2>
+
+                <div class="filter-toggle-wrap me-3">
+                    <button id="toggle-filter" class="filter-toggle-btn" aria-controls="filter-bar" aria-expanded="false">
+                        <img src="~/img/filter.png" alt="Filtreler" style="width:20px; height:20px;">
+                    </button>
+                </div>
             </div>
         </nav>
+
+
     </header>
 
     <!-- container yerine container-fluid + px-0: sayfanın sağ/sol boşluklarını tamamen kapatır -->

@@ -148,19 +148,15 @@
         }
 </style>
 
-
-
-
-
 <!-- IP FİLTRE PANELİ -->
 <div class="ip-filter-bar">
     <label for="ip-allowlist">Gösterilecek IP:</label>
     <input id="ip-allowlist" type="text"
            value="192.168.1.101"
-           placeholder="ör. 192.168.1.101" />
+           placeholder="ör. 192.168.1.101, 192.168.1.102; 10.0.0.5" />
     <button id="ip-apply">Uygula</button>
     <button id="ip-reset">Varsayılan</button>
-    <small>Yalnızca bu IP’lere ait kartlar listelenir, diğerleri gizlenir.</small>
+    <small>Yalnızca bu IP’lere ait kartlar listelenir, diğerleri gizlenir. (Tümü için: <code>*</code>)</small>
 </div>
 
 <div class="w-100">
@@ -294,9 +290,47 @@
     }
 </div>
 
-
 <script>
-    // Varsayılanları yükle
+    // ====== Seçiciler ve sabitler ======
+    const KEY_ALLOW = "CIMAX_IP_ALLOWLIST";
+    const inputEl  = document.getElementById('ip-allowlist');
+    const btnApply = document.getElementById('ip-apply');
+    const btnReset = document.getElementById('ip-reset');
+    const cardsGrid = document.getElementById('cards-grid');
+
+    // IP listesi ayrıştırıcı: virgül, noktalı virgül, boşluk ve satır sonu desteklenir
+    function parseAllowList(str) {
+        if (!str) return [];
+        // '*' => hepsi
+        if (str.trim() === '*') return ['*'];
+        return str
+            .split(/[\s,;]+/g)
+            .map(s => s.trim())
+            .filter(Boolean);
+    }
+
+    // Asıl filtreleyici
+    function applyIpFilter() {
+        if (!cardsGrid) return;
+        const raw = inputEl?.value ?? '';
+        const allowList = parseAllowList(raw);
+
+        const showAll = allowList.length === 0 || allowList.includes('*');
+
+        const cards = cardsGrid.querySelectorAll('.device-card');
+        cards.forEach(card => {
+            const ip = (card.getAttribute('data-ip') || '').trim();
+            const shouldShow = showAll || allowList.includes(ip);
+            // [hidden] attribute kullan (CSS'te tanımlı)
+            if (shouldShow) {
+                card.removeAttribute('hidden');
+            } else {
+                card.setAttribute('hidden', '');
+            }
+        });
+    }
+
+    // ====== Varsayılanları yükle ve uygula ======
     document.addEventListener('DOMContentLoaded', () => {
         const saved = localStorage.getItem(KEY_ALLOW);
         if (saved && saved.trim().length > 0) {
@@ -309,6 +343,14 @@
     btnApply?.addEventListener('click', () => {
         localStorage.setItem(KEY_ALLOW, inputEl.value);
         applyIpFilter();
+    });
+
+    // Enter'a basınca uygula
+    inputEl?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            localStorage.setItem(KEY_ALLOW, inputEl.value);
+            applyIpFilter();
+        }
     });
 
     // Varsayılana dön

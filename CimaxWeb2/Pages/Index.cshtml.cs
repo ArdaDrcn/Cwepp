@@ -107,7 +107,7 @@ public class IndexModel : PageModel
         var code = evt?.Sound ?? 0;
         return code switch
         {
-            0 => "~/img/HoparlorKopuk.png",   // istersen Pasif yapabilirsin
+            0 => "~/img/HoparlorKopuk.png",
             1 => "~/img/HoparlorPasif.png",
             2 => "~/img/HoparlorAktif1.png",
             3 => "~/img/HoparlorAktif2.png",
