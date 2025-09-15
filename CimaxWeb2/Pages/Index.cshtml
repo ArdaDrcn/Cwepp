@@ -174,7 +174,7 @@
                                 </span>
                             </div>
                             <div class="col-2 d-flex justify-content-end ms-auto">
-                                <img class="device-icon" title="Acil Çağrı"
+                                <img class="device-icon"
                                      data-ip="@ipTrim"
                                      style="width:38px;height:38px;"
                                      src="@Url.Content(card.IconPath)"
@@ -219,13 +219,13 @@
                                 var doorIcon = Url.Content(((card.LatestEvent?.Door ?? 0) == 1) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
                             }
 
-                            <div style="width:20%;" title="Soğuk Su Sayaç">
+                            <div style="width:20%;" title="Soğuk Su Sayaç 25°">
                                 <img src="@coldIcon" asp-append-version="true" style="height:48px;" data-role="cold-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem;" data-role="cold-consumed" data-ip="@ipTrim">@(cw?.Consumed ?? "-")</span>
                             </div>
 
-                            <div style="width:20%;" title="Sıcak Su Sayaç">
+                            <div style="width:20%;" title="Sıcak Su Sayaç 40°">
                                 <img src="@hotIcon" asp-append-version="true" style="height:48px;" data-role="hot-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem;" data-role="hot-consumed" data-ip="@ipTrim">@(hw?.Consumed ?? "-")</span>
@@ -277,6 +277,382 @@
                     </div>
                 </div>
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!------------------------------------------------------------------- Görsel Kartlar ------------------------------------------------------------------->
+
+
+
+
+            <!-- KART 1 BAŞLANGIÇ -->
+            <div class="card device-card">
+
+                <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                    <div class="row g-0">
+                        <div class="col-8 d-flex align-items-center">
+                            <span style="color:white;">
+                                <h1 style="font-size:1.2rem;margin:0;">
+                                    Ambar
+                                </h1>
+                            </span>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end ms-auto">
+                            <img class="device-icon"
+                                 style="width:38px;height:38px;"
+                                 src="~/img/GirisKapiPasif.png"
+                                 asp-append-version="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body"
+                     style="background-color: #ebebeb; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <div class="row text-center mb-1 mt-1">
+                        <div style="width:25%;" title="Ses Yayın">
+                            <img src="~/img/DereceAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">23°</span>
+                        </div>
+                        <div style="width:25%;" title="İnterkom">
+                            <img src="~/img/NemAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">%50</span>
+                        </div>
+                        <div style="width:25%;" title="Kapı">
+                            <img src="~/img/YanginPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                        </div>
+                        <div style="width:25%;" title="Lazer Sistemi">
+                            <img src="~/img/SirenAktif.png" style="height:48px;" />
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KART 1 BİTİŞ -->
+            <!-- KART 1 BAŞLANGIÇ -->
+            <div class="card device-card">
+
+                <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                    <div class="row g-0">
+                        <div class="col-8 d-flex align-items-center">
+                            <span style="color:white;">
+                                <h1 style="font-size:1.2rem;margin:0;">
+                                    Dijital Kayıt
+                                </h1>
+                            </span>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end ms-auto">
+                            <img class="device-icon"
+                                 style="width:38px;height:38px;"
+                                 src="~/img/GirisKapiPasif.png"
+                                 asp-append-version="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body"
+                     style="background-color: #ebebeb; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <div class="row text-center mb-1 mt-1">
+                        <div style="width:25%;" title="Ses Yayın">
+                            <img src="~/img/DereceAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">23°</span>
+                        </div>
+                        <div style="width:25%;" title="İnterkom">
+                            <img src="~/img/NemAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">%50</span>
+                        </div>
+                        <div style="width:25%;" title="Kapı">
+                            <img src="~/img/YanginPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                        </div>
+                        <div style="width:25%;" title="Lazer Sistemi">
+                            <img src="~/img/SirenAktif.png" style="height:48px;" />
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KART 1 BİTİŞ -->
+            <!-- KART 1 BAŞLANGIÇ -->
+            <div class="card device-card">
+
+                <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                    <div class="row g-0">
+                        <div class="col-8 d-flex align-items-center">
+                            <span style="color:white;">
+                                <h1 style="font-size:1.2rem;margin:0;">
+                                    Merkez Kontrol
+                                </h1>
+                            </span>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end ms-auto">
+                            <img class="device-icon"
+                                 style="width:38px;height:38px;"
+                                 src="~/img/GirisKapiPasif.png"
+                                 asp-append-version="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body"
+                     style="background-color: #ebebeb; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <div class="row text-center mb-1 mt-1">
+                        <div style="width:25%;" title="Ses Yayın">
+                            <img src="~/img/DereceAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">23°</span>
+                        </div>
+                        <div style="width:25%;" title="İnterkom">
+                            <img src="~/img/NemAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">%50</span>
+                        </div>
+                        <div style="width:25%;" title="Kapı">
+                            <img src="~/img/YanginPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                        </div>
+                        <div style="width:25%;" title="Lazer Sistemi">
+                            <img src="~/img/SirenAktif.png" style="height:48px;" />
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KART 1 BİTİŞ -->
+            <!-- KART 1 BAŞLANGIÇ -->
+            <div class="card device-card">
+
+                <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                    <div class="row g-0">
+                        <div class="col-8 d-flex align-items-center">
+                            <span style="color:white;">
+                                <h1 style="font-size:1.2rem;margin:0;">
+                                    Müdür Yardımcısı
+                                </h1>
+                            </span>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end ms-auto">
+                            <img class="device-icon"
+                                 style="width:38px;height:38px;"
+                                 src="~/img/GirisKapiPasif.png"
+                                 asp-append-version="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body"
+                     style="background-color: #ebebeb; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <div class="row text-center mb-1 mt-1">
+                        <div style="width:25%;" title="Ses Yayın">
+                            <img src="~/img/DereceAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">23°</span>
+                        </div>
+                        <div style="width:25%;" title="İnterkom">
+                            <img src="~/img/NemAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">%50</span>
+                        </div>
+                        <div style="width:25%;" title="Kapı">
+                            <img src="~/img/YanginPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                        </div>
+                        <div style="width:25%;" title="Lazer Sistemi">
+                            <img src="~/img/SirenAktif.png" style="height:48px;" />
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KART 1 BİTİŞ -->
+            <!-- KART 1 BAŞLANGIÇ -->
+            <div class="card device-card">
+
+                <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                    <div class="row g-0">
+                        <div class="col-8 d-flex align-items-center">
+                            <span style="color:white;">
+                                <h1 style="font-size:1.2rem;margin:0;">
+                                    Müdür
+                                </h1>
+                            </span>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end ms-auto">
+                            <img class="device-icon"
+                                 style="width:38px;height:38px;"
+                                 src="~/img/GirisKapiPasif.png"
+                                 asp-append-version="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body"
+                     style="background-color: #ebebeb; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <div class="row text-center mb-1 mt-1">
+                        <div style="width:25%;" title="Ses Yayın">
+                            <img src="~/img/DereceAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">23°</span>
+                        </div>
+                        <div style="width:25%;" title="İnterkom">
+                            <img src="~/img/NemAktif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">%50</span>
+                        </div>
+                        <div style="width:25%;" title="Kapı">
+                            <img src="~/img/YanginPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                        </div>
+                        <div style="width:25%;" title="Lazer Sistemi">
+                            <img src="~/img/SirenAktif.png" style="height:48px;" />
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KART 1 BİTİŞ -->
+
+
+
+
+            <!-- KART 2 BAŞLANGIÇ -->
+            <div class="card device-card">
+
+                <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                    <div class="row g-0">
+                        <div class="col-8 d-flex align-items-center">
+                            <span style="color:white;">
+                                <h1 style="font-size:1.2rem;margin:0;">
+                                    Interlock Giriş
+                                </h1>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body"
+                     style="background-color: #ebebeb; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <div class="row text-center mb-1 mt-1">
+                        <div style="width:50%;" title="Ses Yayın">
+                            <img src="~/img/GirisKapiPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">Kapı 1</span>
+                        </div>
+                        <div style="width:50%;" title="İnterkom">
+                            <img src="~/img/GirisKapiPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">Kapı 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KART 2 BİTİŞ -->
+            <!-- KART 2 BAŞLANGIÇ -->
+            <div class="card device-card">
+
+                <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                    <div class="row g-0">
+                        <div class="col-8 d-flex align-items-center">
+                            <span style="color:white;">
+                                <h1 style="font-size:1.2rem;margin:0;">
+                                    Interlock Sağ
+                                </h1>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body"
+                     style="background-color: #ebebeb; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <div class="row text-center mb-1 mt-1">
+                        <div style="width:50%;" title="Ses Yayın">
+                            <img src="~/img/GirisKapiPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">Kapı 1</span>
+                        </div>
+                        <div style="width:50%;" title="İnterkom">
+                            <img src="~/img/GirisKapiPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">Kapı 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KART 2 BİTİŞ -->
+            <!-- KART 2 BAŞLANGIÇ -->
+            <div class="card device-card">
+
+                <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
+                    <div class="row g-0">
+                        <div class="col-8 d-flex align-items-center">
+                            <span style="color:white;">
+                                <h1 style="font-size:1.2rem;margin:0;">
+                                    Interlock Sol
+                                </h1>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body"
+                     style="background-color: #ebebeb; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <div class="row text-center mb-1 mt-1">
+                        <div style="width:50%;" title="Ses Yayın">
+                            <img src="~/img/GirisKapiPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">Kapı 1</span>
+                        </div>
+                        <div style="width:50%;" title="İnterkom">
+                            <img src="~/img/GirisKapiPasif.png" style="width:48px;height:48px;" />
+                            <br />
+                            <span class="badge text-bg-primary" style="width:3rem;">Kapı 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KART 2 BİTİŞ -->
+
+
+
+
+            <!------------------------------------------------------------------- Görsel Kartlar ------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
     }
     else

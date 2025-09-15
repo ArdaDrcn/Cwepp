@@ -107,6 +107,7 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\fonts\MarkPro\MarkPro.ttf
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\wwwroot\lib\jquery\LICENSE.txt
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\wwwroot\lib\jquery\dist\jquery.slim.min.js

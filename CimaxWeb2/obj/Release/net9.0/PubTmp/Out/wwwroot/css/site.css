@@ -1,3 +1,28 @@
+/* 1) Fontu tanýt */
+@font-face {
+    font-family: "Mark Pro";
+    src: local("Mark Pro"), local("MarkPro"), url("/fonts/MarkPro/MarkPro.ttf") format("truetype");
+    font-weight: 400; /* bu dosya muhtemelen Regular */
+    font-style: normal;
+    font-display: swap; /* FOIT yok, ilk anda sistem fontu görünüp sonra Mark Pro'ya geçer */
+}
+
+/* 2) Global font ailesi (fallback’lý) */
+:root {
+    --font-sans: "Mark Pro", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+
+/* 3) Tüm siteye uygula (form elemanlarýný da dahil et) */
+html, body, input, button, select, textarea {
+    font-family: var(--font-sans);
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
 html {
   font-size: 14px;
 }

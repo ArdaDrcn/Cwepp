@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CimaxWeb2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+138ca615acb344f5bdcff5f7fd2a710ae5ad7cf8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a42878750e28b60b50a1612dfbbcfd1b704c9917")]
 [assembly: System.Reflection.AssemblyProductAttribute("CimaxWeb2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CimaxWeb2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

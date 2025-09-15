@@ -4,7 +4,6 @@ wwwroot\css\sidebarstyle.css
 wwwroot\css\site.css
 wwwroot\css\tablestyle.css
 wwwroot\favicon.ico
-wwwroot\fonts\MarkPro\MarkPro.ttf
 wwwroot\img\AcilCagriAktif.png
 wwwroot\img\AcilCagriKopuk.png
 wwwroot\img\AcilCagriPasif.png
@@ -14,9 +13,7 @@ wwwroot\img\DerecePasif.png
 wwwroot\img\DerecePasif2.png
 wwwroot\img\ElektrikSayacAktif.png
 wwwroot\img\ElektrikSayacPasif.png
-wwwroot\img\filter.png
 wwwroot\img\GardiyanAktifGif - Eski.gif
-wwwroot\img\GardiyanAktifGif.gif
 wwwroot\img\GirisKapiAktif.png
 wwwroot\img\GirisKapiKopuk.png
 wwwroot\img\GirisKapiPasif.png
@@ -39,9 +36,9 @@ wwwroot\img\SirenAlarm.png
 wwwroot\img\SirenPasif.png
 wwwroot\img\SuSayacSicakAktif.png
 wwwroot\img\SuSayacSicakPasif.png
-wwwroot\img\SuSayacSicakPasif2.png
 wwwroot\img\SuSayacSogukAktif.png
 wwwroot\img\SuSayacSogukPasif.png
+wwwroot\img\SuSayacSicakPasif2.png
 wwwroot\img\SuSayacSogukPasif2.png
 wwwroot\img\warning.png
 wwwroot\img\YanginAktif.png
@@ -108,6 +105,9 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\img\filter.png
+wwwroot\img\GardiyanAktifGif.gif
+wwwroot\fonts\MarkPro\MarkPro.ttf
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\wwwroot\lib\jquery\dist\jquery.slim.js
 C:\01 - Calismalar\001 - Web Geliştirme\Aktif Projeler\Cwepp\CimaxWeb2\wwwroot\lib\jquery\dist\jquery.min.map

@@ -11,12 +11,12 @@
       "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\01 - calismalar\\001 - web geli\u015Ftirme\\aktif projeler\\cwepp\\cimaxweb2\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\01 - calismalar\\001 - web geli\u015Ftirme\\aktif projeler\\cwepp\\cimaxweb2\\pages\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\pages\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\01 - calismalar\\001 - web geli\u015Ftirme\\aktif projeler\\cwepp\\cimaxweb2\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\01 - calismalar\\001 - web geli\u015Ftirme\\aktif projeler\\cwepp\\cimaxweb2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "CimaxWeb2\\Pages\\Index2.cshtml",
               "ToolTip": "C:\\01 - Calismalar\\001 - Web Geli\u015Ftirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\Pages\\Index2.cshtml",
               "RelativeToolTip": "CimaxWeb2\\Pages\\Index2.cshtml",
-              "ViewState": "AgIAAFEBAAAAAAAAAAAIwHgBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAJkAAAAAAAAAAAAuwLYAAACBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-14T14:43:01.851Z",
               "EditorCaption": ""
@@ -53,14 +53,14 @@
               "RelativeDocumentMoniker": "CimaxWeb2\\Pages\\Index.cshtml",
               "ToolTip": "C:\\01 - Calismalar\\001 - Web Geli\u015Ftirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\Pages\\Index.cshtml",
               "RelativeToolTip": "CimaxWeb2\\Pages\\Index.cshtml",
-              "ViewState": "AgIAAJAAAAAAAAAAAAAAAKAAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAIQDAAAAAAAAAAAAAJkDAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-13T10:59:06.664Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Index.cshtml.cs",
               "DocumentMoniker": "C:\\01 - Calismalar\\001 - Web Geli\u015Ftirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\Pages\\Index.cshtml.cs",
               "RelativeDocumentMoniker": "CimaxWeb2\\Pages\\Index.cshtml.cs",
@@ -73,13 +73,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\01 - Calismalar\\001 - Web Geli\u015Ftirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\Pages\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "CimaxWeb2\\Pages\\Shared\\_Layout.cshtml",
               "ToolTip": "C:\\01 - Calismalar\\001 - Web Geli\u015Ftirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\Pages\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "CimaxWeb2\\Pages\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACcAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAADgAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-13T12:05:41.882Z",
               "EditorCaption": ""

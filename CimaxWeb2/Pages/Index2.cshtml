@@ -5,7 +5,6 @@
 }
 
 <style>
-    /* Sadece ölçek: 3x (değiştirilebilir) */
     :root {
         --zoom: 3;
     }
@@ -25,7 +24,6 @@
         background-color: rgba(128,128,128,.459);
     }
 
-    /* Kartı sadece scale ile büyüt */
     .device-card-large {
         transform: scale(var(--zoom));
         transform-origin: top left;
@@ -59,7 +57,6 @@
         }
     }
 
-    /* --- Filtre çubuğu --- */
     .filter-bar {
         display: flex;
         gap: .5rem;
@@ -86,7 +83,7 @@
             padding: .4rem .75rem;
             border-radius: .5rem;
             border: 1px solid #ddd;
-            background: white;
+            background: #fff;
             cursor: pointer;
         }
 
@@ -106,7 +103,6 @@
         margin-bottom: .25rem;
     }
 
-    /* ==== IP filtre paneli ==== */
     .ip-filter-bar {
         display: flex;
         flex-wrap: wrap;
@@ -135,7 +131,7 @@
             padding: .4rem .75rem;
             border: 1px solid #ddd;
             border-radius: .5rem;
-            background: white;
+            background: #fff;
             cursor: pointer;
         }
 
@@ -173,22 +169,24 @@
                 if (renderedIps.Contains(ipTrim)) { continue; }
                 renderedIps.Add(ipTrim);
 
-                <div class="card device-card device-card-large" data-ip="@ipTrim">
+                // !!! HATA DÜZELTME: isDisc burada tanımlandı
+                var isDisc = card.Device?.Status?.Equals("Disconnected", StringComparison.OrdinalIgnoreCase) == true;
+
+                <div class="card device-card device-card-large" data-ip="@ipTrim" data-disconnected="@(isDisc.ToString().ToLower())">
                     <!-- Overlay -->
                     <img class="status-overlay"
                          data-ip="@ipTrim"
                          src="~/img/warning.png"
                          alt="disconnect"
-                         style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;z-index:10;opacity:.70;display:@(card.Device.Status?.Equals("Disconnected", StringComparison.OrdinalIgnoreCase) == true ? "block" : "none");" />
+                         style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:250px;height:250px;z-index:10;opacity:.70;display:@(isDisc ? "block" : "none");" />
 
                     <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
                         <div class="row g-0">
                             <div class="col-8 d-flex align-items-center">
-                                <span style="color:white;">
-                                    <h1 style="font-size:1.2rem;margin:0;">
-                                        @(card.Device.Name ?? "(isimsiz cihaz)") - @card.Device.Location
-                                    </h1>
-                                </span>
+                                <!-- HTML uyarısı için <span> kaldırıldı -->
+                                <h1 style="font-size:1.2rem;margin:0;color:white;">
+                                    @(card.Device.Name ?? "(isimsiz cihaz)") - @card.Device.Location
+                                </h1>
                             </div>
                             <div class="col-2 d-flex justify-content-end ms-auto">
                                 <img class="device-icon"
@@ -202,7 +200,6 @@
 
                     <div class="card-body" style="background-color:#ebebeb;border-bottom-left-radius:1rem;border-bottom-right-radius:1rem;">
                         <div class="row text-center">
-
                             @{
                                 var cw = card.LatestEvent?.ColdWaterMeter;
                                 var coldActive = (cw?.Status == "1") || string.Equals(cw?.Status, "true", StringComparison.OrdinalIgnoreCase);
@@ -232,50 +229,54 @@
                                 var doorIcon = Url.Content(((card.LatestEvent?.Door ?? 0) == 1) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
                             }
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Soğuk Su Sayaç 25°">
                                 <img src="@coldIcon" asp-append-version="true" style="height:48px;" data-role="cold-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem;" data-role="cold-consumed" data-ip="@ipTrim">@(cw?.Consumed ?? "-")</span>
                             </div>
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Sıcak Su Sayaç 40°">
                                 <img src="@hotIcon" asp-append-version="true" style="height:48px;" data-role="hot-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem;" data-role="hot-consumed" data-ip="@ipTrim">@(hw?.Consumed ?? "-")</span>
                             </div>
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Elektrik Sayacı">
                                 <img src="@elecIcon" asp-append-version="true" style="height:48px;" data-role="elec-icon" data-ip="@ipTrim" />
                                 <br />
                                 <span class="badge text-bg-primary" style="width:3rem;" data-role="elec-consumption" data-ip="@ipTrim">@(em?.Consumption ?? "-")</span>
                             </div>
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Sıcaklık">
                                 <img src="@degIcon" asp-append-version="true" style="height:48px;" data-role="degree-icon" data-ip="@ipTrim" />
                                 <br />
-                                <span class="badge text-bg-primary" style="width:3rem;" data-role="degree-value" data-ip="@ipTrim">@degValue</span>
+                                <span class="badge text-bg-primary deg-wrap" style="width:3rem; white-space:nowrap;" data-ip="@ipTrim">
+                                    <span data-role="degree-value" data-ip="@ipTrim">@degValue</span><span aria-hidden="true">°</span>
+                                </span>
                             </div>
 
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Nem">
                                 <img src="@humIcon" asp-append-version="true" style="height:48px;" data-role="humidity-icon" data-ip="@ipTrim" />
                                 <br />
-                                <span class="badge text-bg-primary" style="width:3rem;" data-role="humidity-value" data-ip="@ipTrim">@humValue</span>
+                                <span class="badge text-bg-primary" style="width:3rem; white-space:nowrap;" data-ip="@ipTrim">
+                                    <span aria-hidden="true">%</span><span data-role="humidity-value" data-ip="@ipTrim">@humValue</span>
+                                </span>
                             </div>
                         </div>
 
                         <hr style="margin-top:.8rem;margin-bottom:.8rem;" />
 
                         <div class="row text-center mb-1 mt-1">
-                            <div style="width:40%;">
+                            <div style="width:40%;" title="Lazer Sistemi">
                                 <img src="@laserIcon" asp-append-version="true" style="height:48px;" data-role="laser-icon" data-ip="@ipTrim" />
                             </div>
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Ses Yayın">
                                 <img src="@soundIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="sound-icon" data-ip="@ipTrim" />
                             </div>
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="İnterkom">
                                 <img src="@intercomIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="intercom-icon" data-ip="@ipTrim" />
                             </div>
-                            <div style="width:20%;">
+                            <div style="width:20%;" title="Kapı">
                                 <img src="@doorIcon" asp-append-version="true" style="width:48px;height:48px;" data-role="door-icon" data-ip="@ipTrim" />
                             </div>
                         </div>
@@ -291,61 +292,258 @@
 </div>
 
 <script>
-    // ====== Seçiciler ve sabitler ======
+    // === GLOBALS ===
+    const lastSeen = new Map();
+    const basePulseUrl = '@Url.Page("Index", "Pulse")';
+
+    // currentSort: roleKey (string|null), target (number), discFirst (bool)
+    let currentSort = null;
+
+    // === Yardımcılar ===
+    function stateFromSrc(img) {
+        if (!img) return 0;
+        const src = (img.getAttribute('src') || '').toLowerCase();
+        if (src.includes('alarm')) return 2;
+        if (src.includes('aktif')) return 1;
+        if (src.includes('pasif')) return 0;
+        return 0;
+    }
+
+    function imgForRole(cardEl, roleKey) {
+        switch (roleKey) {
+            case 'ots':
+            case 'device':   return cardEl.querySelector('img.device-icon');
+            case 'laser':    return cardEl.querySelector('img[data-role="laser-icon"]');
+            case 'sound':    return cardEl.querySelector('img[data-role="sound-icon"]');
+            case 'intercom': return cardEl.querySelector('img[data-role="intercom-icon"]');
+            case 'door':     return cardEl.querySelector('img[data-role="door-icon"]');
+            case 'cold':     return cardEl.querySelector('img[data-role="cold-icon"]');
+            case 'hot':      return cardEl.querySelector('img[data-role="hot-icon"]');
+            case 'elec':     return cardEl.querySelector('img[data-role="elec-icon"]');
+            case 'degree':   return cardEl.querySelector('img[data-role="degree-icon"]');
+            case 'humidity': return cardEl.querySelector('img[data-role="humidity-icon"]');
+            default:         return null;
+        }
+    }
+
+    function getStateForRole(cardEl, roleKey) {
+        const img = imgForRole(cardEl, roleKey);
+        return stateFromSrc(img);
+    }
+
+    function isDisconnected(cardEl) {
+        return (cardEl.getAttribute('data-disconnected') || 'false') === 'true';
+    }
+
+    // === Sıralama ===
+    function sortByRoleAndState(roleKey, target, discFirst = false) {
+        const grid = document.querySelector('.cards-grid');
+        if (!grid) return;
+
+        const cards = Array.from(grid.querySelectorAll('.device-card'));
+        const list = cards.map((el) => ({
+            el,
+            orig: Number(el.getAttribute('data-original-index') ?? '0'),
+            val: getStateForRole(el, roleKey),
+            disc: isDisconnected(el) ? 1 : 0
+        }));
+
+        list.sort((a, b) => {
+            if (discFirst && a.disc !== b.disc) return b.disc - a.disc;
+            const aMatch = (a.val === target) ? 1 : 0;
+            const bMatch = (b.val === target) ? 1 : 0;
+            if (aMatch !== bMatch) return bMatch - aMatch;
+            if (a.val !== b.val)   return b.val - a.val; // 2>1>0
+            return a.orig - b.orig;
+        });
+
+        list.forEach(x => grid.appendChild(x.el));
+    }
+
+    function reapplySortIfAny() {
+        if (currentSort) {
+            sortByRoleAndState(currentSort.roleKey, currentSort.target, currentSort.discFirst);
+        }
+    }
+
+    // === UI BAĞLANTI & ORİJİNAL SIRA KAYDI ===
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.querySelector('.cards-grid');
+        if (grid) {
+            Array.from(grid.querySelectorAll('.device-card'))
+                 .forEach((el, idx) => el.setAttribute('data-original-index', String(idx)));
+        }
+
+        const roleSel  = document.getElementById('filter-role');
+        const stateSel = document.getElementById('filter-state');
+        const btnApply = document.getElementById('apply-filter');
+        const btnClear = document.getElementById('clear-filter');
+
+        btnApply && btnApply.addEventListener('click', () => {
+            const roleKey = (roleSel && roleSel.value) ? roleSel.value : 'laser';
+            const target = Number(stateSel && stateSel.value ? stateSel.value : 1);
+            const discFirst = (roleKey === 'ots' && target === 0);
+            currentSort = { roleKey, target, discFirst };
+            sortByRoleAndState(roleKey, target, discFirst);
+        });
+
+        btnClear && btnClear.addEventListener('click', () => {
+            currentSort = null;
+            const grid2 = document.querySelector('.cards-grid');
+            if (!grid2) return;
+            const cards = Array.from(grid2.querySelectorAll('.device-card'));
+            cards.sort((a, b) =>
+                Number(a.getAttribute('data-original-index')) -
+                Number(b.getAttribute('data-original-index'))
+            );
+            cards.forEach(c => grid2.appendChild(c));
+        });
+
+        const toggleBtn = document.getElementById('toggle-filter');
+        const filterBar = document.getElementById('filter-bar');
+        if (toggleBtn && filterBar) {
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = filterBar.hasAttribute('hidden');
+                if (isHidden) {
+                    filterBar.removeAttribute('hidden');
+                    toggleBtn.setAttribute('aria-expanded','true');
+                } else {
+                    filterBar.setAttribute('hidden','');
+                    toggleBtn.setAttribute('aria-expanded','false');
+                }
+            });
+        }
+    });
+
+    // === PULSE ===
+    function buildPulseUrl() {
+        const u = new URL(basePulseUrl, window.location.origin);
+        u.searchParams.set('_', Date.now().toString());
+        return u.toString();
+    }
+
+    async function poll() {
+        try {
+            const res = await fetch(buildPulseUrl(), { cache: 'no-store' });
+            if (!res.ok) return;
+            const data = await res.json();
+
+            for (const raw of data) {
+                const ip = (raw.ip || '').trim();
+                const ticks = raw.updatedAtTicks || 0;
+                const iconUrl = raw.iconUrl || '';
+                const showOverlay = !!raw.showOverlay;
+
+                // Overlay ve data-disconnected güncelle
+                let overlays = document.querySelectorAll(`img.status-overlay[data-ip="${ip}"]`);
+                if (overlays.length === 0) overlays = document.querySelectorAll('img.status-overlay[data-ip]');
+                overlays.forEach(ov => {
+                    const ovIp = (ov.getAttribute('data-ip') || '').trim();
+                    if (ovIp === ip) {
+                        ov.style.display = showOverlay ? 'block' : 'none';
+                        const card = ov.closest('.device-card');
+                        if (card) card.setAttribute('data-disconnected', showOverlay ? 'true' : 'false');
+                    }
+                });
+
+                const prev = lastSeen.get(ip);
+                if (prev === undefined) {
+                    lastSeen.set(ip, ticks);
+                } else if (ticks !== prev) {
+                    document.querySelectorAll(`img.device-icon[data-ip="${ip}"]`).forEach(img => {
+                        const url = new URL(iconUrl, window.location.origin);
+                        url.searchParams.set('v', String(ticks));
+                        img.src = url.toString();
+                    });
+
+                    const updateImg = (sel, urlProp) => {
+                        const el = document.querySelector(`${sel}[data-ip="${ip}"]`);
+                        if (el && raw[urlProp]) {
+                            const u = new URL(raw[urlProp], window.location.origin);
+                            u.searchParams.set('v', String(ticks));
+                            el.src = u.toString();
+                        }
+                    };
+
+                    updateImg('img[data-role="cold-icon"]', 'coldIconUrl');
+                    const coldSpan = document.querySelector(`span[data-role="cold-consumed"][data-ip="${ip}"]`);
+                    if (coldSpan && ('coldConsumed' in raw)) coldSpan.textContent = (raw.coldConsumed ?? '-');
+
+                    updateImg('img[data-role="hot-icon"]', 'hotIconUrl');
+                    const hotSpan = document.querySelector(`span[data-role="hot-consumed"][data-ip="${ip}"]`);
+                    if (hotSpan && ('hotConsumed' in raw)) hotSpan.textContent = (raw.hotConsumed ?? '-');
+
+                    updateImg('img[data-role="elec-icon"]', 'elecIconUrl');
+                    const elecSpan = document.querySelector(`span[data-role="elec-consumption"][data-ip="${ip}"]`);
+                    if (elecSpan && ('elecConsumption' in raw)) elecSpan.textContent = (raw.elecConsumption ?? '-');
+
+                    updateImg('img[data-role="degree-icon"]', 'degreeIconUrl');
+                    const degSpan = document.querySelector(`span[data-role="degree-value"][data-ip="${ip}"]`);
+                    if (degSpan && ('degreeValue' in raw)) degSpan.textContent = (raw.degreeValue ?? '-');
+
+                    updateImg('img[data-role="humidity-icon"]', 'humidityIconUrl');
+                    const humSpan = document.querySelector(`span[data-role="humidity-value"][data-ip="${ip}"]`);
+                    if (humSpan && ('humidityValue' in raw)) humSpan.textContent = (raw.humidityValue ?? '-');
+
+                    updateImg('img[data-role="laser-icon"]', 'laserIconUrl');
+                    updateImg('img[data-role="sound-icon"]', 'soundIconUrl');
+                    updateImg('img[data-role="intercom-icon"]', 'intercomIconUrl');
+                    updateImg('img[data-role="door-icon"]', 'doorIconUrl');
+
+                    lastSeen.set(ip, ticks);
+                }
+            }
+
+            // Varsa seçili sıralamayı yeniden uygula
+            reapplySortIfAny();
+
+        } catch (e) { /* sessizce yut */ }
+    }
+
+    setInterval(poll, 2000);
+    poll();
+</script>
+
+<script>
+    /* ==== IP ALLOWLIST FİLTRESİ ==== */
     const KEY_ALLOW = "CIMAX_IP_ALLOWLIST";
     const inputEl  = document.getElementById('ip-allowlist');
     const btnApply = document.getElementById('ip-apply');
     const btnReset = document.getElementById('ip-reset');
     const cardsGrid = document.getElementById('cards-grid');
 
-    // IP listesi ayrıştırıcı: virgül, noktalı virgül, boşluk ve satır sonu desteklenir
     function parseAllowList(str) {
         if (!str) return [];
-        // '*' => hepsi
         if (str.trim() === '*') return ['*'];
-        return str
-            .split(/[\s,;]+/g)
-            .map(s => s.trim())
-            .filter(Boolean);
+        return str.split(/[\s,;]+/g).map(s => s.trim()).filter(Boolean);
     }
 
-    // Asıl filtreleyici
     function applyIpFilter() {
         if (!cardsGrid) return;
         const raw = inputEl?.value ?? '';
         const allowList = parseAllowList(raw);
-
         const showAll = allowList.length === 0 || allowList.includes('*');
 
         const cards = cardsGrid.querySelectorAll('.device-card');
         cards.forEach(card => {
             const ip = (card.getAttribute('data-ip') || '').trim();
             const shouldShow = showAll || allowList.includes(ip);
-            // [hidden] attribute kullan (CSS'te tanımlı)
-            if (shouldShow) {
-                card.removeAttribute('hidden');
-            } else {
-                card.setAttribute('hidden', '');
-            }
+            if (shouldShow) card.removeAttribute('hidden');
+            else card.setAttribute('hidden', '');
         });
     }
 
-    // ====== Varsayılanları yükle ve uygula ======
     document.addEventListener('DOMContentLoaded', () => {
         const saved = localStorage.getItem(KEY_ALLOW);
-        if (saved && saved.trim().length > 0) {
-            inputEl.value = saved;
-        }
+        if (saved && saved.trim().length > 0) inputEl.value = saved;
         applyIpFilter();
     });
 
-    // Uygula + Kaydet
     btnApply?.addEventListener('click', () => {
         localStorage.setItem(KEY_ALLOW, inputEl.value);
         applyIpFilter();
     });
 
-    // Enter'a basınca uygula
     inputEl?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             localStorage.setItem(KEY_ALLOW, inputEl.value);
@@ -353,24 +551,9 @@
         }
     });
 
-    // Varsayılana dön
     btnReset?.addEventListener('click', () => {
         inputEl.value = "192.168.1.101";
         localStorage.setItem(KEY_ALLOW, inputEl.value);
         applyIpFilter();
     });
-
-    // ====== PULSE ALTYAPISI (mevcut sayfadan) ======
-    const lastSeen = new Map();
-    const basePulseUrl = '@Url.Page(null, "Pulse")';
-
-    function buildPulseUrl() {
-        const u = new URL(basePulseUrl, window.location.origin);
-        u.searchParams.set('_', Date.now().toString());
-        return u.toString();
-    }
-
-    async function poll() { /* Index1 ile aynı içerik */ }
-    setInterval(poll, 2000);
-    poll();
 </script>
