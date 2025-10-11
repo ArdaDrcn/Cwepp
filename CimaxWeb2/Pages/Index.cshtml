@@ -94,26 +94,24 @@
     }
 </style>
 
-<!-- ===== FİLTRE ÇUBUĞU ===== -->
-<div id="filter-bar" hidden style="padding:0.5rem; background:#f8f9fa; border-bottom:1px solid #ccc;">
-    <!-- Blok Filtresi -->
-    <div style="margin-bottom:0.5rem;">
-        <label for="block-filter" class="me-2">Blok Seç:</label>
+<!-- (Opsiyonel) Filtre bar alanı — İstersen aktifleştir -->
+<div id="filter-bar" hidden class="filter-bar">
+    <div>
+        <label for="block-filter">Blok Seç:</label>
         <select id="block-filter">
             <option value="">(Tümü)</option>
             @foreach (var card in Model.Cards.Where(c => !string.IsNullOrWhiteSpace(c.Device?.Name))
-                        .Select(c => c.Device!.Name).Distinct())
+                        .Select(c => c.Device!.Name!).Distinct())
             {
                 <option value="@card">@card</option>
             }
         </select>
-        <button id="apply-block" class="btn btn-sm btn-primary ms-2">Uygula</button>
-        <button id="clear-block" class="btn btn-sm btn-secondary ms-1">Temizle</button>
+        <button id="apply-block">Uygula</button>
+        <button id="clear-block">Temizle</button>
     </div>
 
-    <!-- İkon Türü + Durum -->
-    <div style="margin-bottom:0.5rem;">
-        <label for="filter-role" class="me-2">İkon Türü:</label>
+    <div>
+        <label for="filter-role">İkon Türü:</label>
         <select id="filter-role">
             <option value="ots">OTS</option>
             <option value="laser">Lazer</option>
@@ -128,15 +126,15 @@
             <option value="humidity">Nem</option>
         </select>
 
-        <label for="filter-state" class="ms-3 me-2">Durum:</label>
+        <label for="filter-state" class="ms-3">Durum:</label>
         <select id="filter-state">
             <option value="2">Alarm</option>
             <option value="1">Aktif</option>
             <option value="0" selected>Pasif</option>
         </select>
 
-        <button id="apply-filter" class="btn btn-sm btn-primary ms-2">Uygula</button>
-        <button id="clear-filter" class="btn btn-sm btn-secondary ms-1">Temizle</button>
+        <button id="apply-filter">Uygula</button>
+        <button id="clear-filter">Temizle</button>
     </div>
 </div>
 
@@ -145,7 +143,7 @@
     {
         <div class="cards-grid">
             @{
-                // === 1) PRISON-EVENT TABANLI CİHAZ KARTLARI ===
+                // === PRISON (ana cihaz kartı) — her IP için 1 kez
                 var renderedIps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             }
             @foreach (var card in Model.Cards.Where(c => c.LatestEvent != null))
@@ -157,7 +155,7 @@
 
                 var isDisc = card.Device?.Status?.Equals("Disconnected", StringComparison.OrdinalIgnoreCase) == true;
 
-                <div class="card device-card" data-disconnected="@(isDisc.ToString().ToLower())">
+                <div class="card device-card" data-disconnected="@(isDisc.ToString().ToLower())" data-original-index="">
                     <!-- Overlay -->
                     <img class="status-overlay"
                          data-ip="@ipTrim"
@@ -185,41 +183,40 @@
                     </div>
 
                     <div class="card-body" style="background-color:#ebebeb;border-bottom-left-radius:1rem;border-bottom-right-radius:1rem;">
+                        @{
+                            // Soğuk / Sıcak su
+                            var cw = card.LatestEvent?.ColdWaterMeter;
+                            var coldActive = (cw?.Status == "1") || string.Equals(cw?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                            var coldIcon = Url.Content(coldActive ? "~/img/SuSayacSogukAktif.png" : "~/img/SuSayacSogukPasif.png");
+
+                            var hw = card.LatestEvent?.HotWaterMeter;
+                            var hotActive = (hw?.Status == "1") || string.Equals(hw?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                            var hotIcon = Url.Content(hotActive ? "~/img/SuSayacSicakAktif.png" : "~/img/SuSayacSicakPasif.png");
+
+                            // Elektrik
+                            var em = card.LatestEvent?.ElectricityMeter;
+                            var elecActive = (em?.Status == "1") || string.Equals(em?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                            var elecIcon = Url.Content(elecActive ? "~/img/ElektrikSayacAktif.png" : "~/img/ElektrikSayacPasif.png");
+
+                            // Derece / Nem
+                            var dg = card.LatestEvent?.Degree;
+                            var degActive = (dg?.Status == "1") || string.Equals(dg?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                            var degIcon = Url.Content(degActive ? "~/img/DereceAktif.png" : "~/img/DerecePasif.png");
+                            var degValue = dg?.Value ?? "-";
+
+                            var hm = card.LatestEvent?.Humidity;
+                            var humActive = (hm?.Status == "1") || string.Equals(hm?.Status, "true", StringComparison.OrdinalIgnoreCase);
+                            var humIcon = Url.Content(humActive ? "~/img/NemAktif.png" : "~/img/NemPasif.png");
+                            var humValue = hm?.Value ?? "-";
+
+                            // Laser / Sound / Intercom / Door
+                            var laserIcon = Url.Content(((card.LatestEvent?.Laser ?? 0) == 1) ? "~/img/LazerAktif.png" : "~/img/LazerPasif.png");
+                            var soundIcon = Url.Content(((card.LatestEvent?.Sound ?? 0) == 1) ? "~/img/HoparlorAktif1.png" : "~/img/HoparlorPasif.png");
+                            var intercomIcon = Url.Content(((card.LatestEvent?.Intercom ?? 0) == 1) ? "~/img/InterkomAktif.png" : "~/img/InterkomPasif.png");
+                            var doorIcon = Url.Content(((card.LatestEvent?.Door ?? 0) == 1) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
+                        }
+
                         <div class="row text-center">
-
-                            @{
-                                // Soğuk / Sıcak su
-                                var cw = card.LatestEvent?.ColdWaterMeter;
-                                var coldActive = (cw?.Status == "1") || string.Equals(cw?.Status, "true", StringComparison.OrdinalIgnoreCase);
-                                var coldIcon = Url.Content(coldActive ? "~/img/SuSayacSogukAktif.png" : "~/img/SuSayacSogukPasif.png");
-
-                                var hw = card.LatestEvent?.HotWaterMeter;
-                                var hotActive = (hw?.Status == "1") || string.Equals(hw?.Status, "true", StringComparison.OrdinalIgnoreCase);
-                                var hotIcon = Url.Content(hotActive ? "~/img/SuSayacSicakAktif.png" : "~/img/SuSayacSicakPasif.png");
-
-                                // Elektrik
-                                var em = card.LatestEvent?.ElectricityMeter;
-                                var elecActive = (em?.Status == "1") || string.Equals(em?.Status, "true", StringComparison.OrdinalIgnoreCase);
-                                var elecIcon = Url.Content(elecActive ? "~/img/ElektrikSayacAktif.png" : "~/img/ElektrikSayacPasif.png");
-
-                                // Derece / Nem
-                                var dg = card.LatestEvent?.Degree;
-                                var degActive = (dg?.Status == "1") || string.Equals(dg?.Status, "true", StringComparison.OrdinalIgnoreCase);
-                                var degIcon = Url.Content(degActive ? "~/img/DereceAktif.png" : "~/img/DerecePasif.png");
-                                var degValue = dg?.Value ?? "-";
-
-                                var hm = card.LatestEvent?.Humidity;
-                                var humActive = (hm?.Status == "1") || string.Equals(hm?.Status, "true", StringComparison.OrdinalIgnoreCase);
-                                var humIcon = Url.Content(humActive ? "~/img/NemAktif.png" : "~/img/NemPasif.png");
-                                var humValue = hm?.Value ?? "-";
-
-                                // Laser / Sound / Intercom / Door
-                                var laserIcon = Url.Content(((card.LatestEvent?.Laser ?? 0) == 1) ? "~/img/LazerAktif.png" : "~/img/LazerPasif.png");
-                                var soundIcon = Url.Content(((card.LatestEvent?.Sound ?? 0) == 1) ? "~/img/HoparlorAktif1.png" : "~/img/HoparlorPasif.png");
-                                var intercomIcon = Url.Content(((card.LatestEvent?.Intercom ?? 0) == 1) ? "~/img/InterkomAktif.png" : "~/img/InterkomPasif.png");
-                                var doorIcon = Url.Content(((card.LatestEvent?.Door ?? 0) == 1) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
-                            }
-
                             <div style="width:20%;" title="Soğuk Su Sayaç 25°">
                                 <img src="@coldIcon" asp-append-version="true" style="height:48px;" data-role="cold-icon" data-ip="@ipTrim" />
                                 <br />
@@ -274,29 +271,40 @@
                     </div>
                 </div>
             }
-            
-            <!-- === 2) INTERLOCK-EVENT KARTLARI (PrisonEvent'lerden SONRA) ✅ === -->
+
+            @* ======= INTERLOCK KARTLARI (prisonevents sonrası) ======= *@
+            @{
+                var renderedIpsInterlock = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
             @foreach (var card in Model.Cards.Where(c => c.LatestInterlockEvent != null))
             {
                 var ipTrim = card.Device?.Ip?.Trim() ?? "";
                 if (string.IsNullOrWhiteSpace(ipTrim)) { continue; }
+                if (renderedIpsInterlock.Contains(ipTrim)) { continue; }
+                renderedIpsInterlock.Add(ipTrim);
 
+                var ie = card.LatestInterlockEvent!;
+                var door1Icon = Url.Content(ie.Door1Active ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
+                var door2Icon = Url.Content(ie.Door2Active ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png");
                 var isDisc = card.Device?.Status?.Equals("Disconnected", StringComparison.OrdinalIgnoreCase) == true;
 
-                var door1Icon = Url.Content(IndexModel.IconPathForInterlockDoor(card.LatestInterlockEvent!.Door1));
-                var door2Icon = Url.Content(IndexModel.IconPathForInterlockDoor(card.LatestInterlockEvent!.Door2));
-
-                <div class="card device-card" data-disconnected="@(isDisc.ToString().ToLower())">
+                <div class="card device-card" data-disconnected="@(isDisc.ToString().ToLower())" data-original-index="">
                     <div class="card-header" style="height:50px;border-top-right-radius:1rem;border-top-left-radius:1rem;background-color:#6496ff;">
                         <div class="row g-0">
                             <div class="col-8 d-flex align-items-center">
                                 <span style="color:white;">
                                     <h1 style="font-size:1.2rem;margin:0;">
-                                        @card.Title
+                                        @(card.Device.Name ?? "(isimsiz cihaz)") - @card.Device.Location
                                     </h1>
                                 </span>
                             </div>
-                            <div class="col-2 d-flex justify-content-end ms-auto"></div>
+                            <div class="col-2 d-flex justify-content-end ms-auto">
+                                <img class="device-icon"
+                                     data-ip="@ipTrim"
+                                     style="width:38px;height:38px;"
+                                     src="~/img/GirisKapiPasif.png"
+                                     asp-append-version="true" />
+                            </div>
                         </div>
                     </div>
 
@@ -306,22 +314,22 @@
                                 <img src="@door1Icon" asp-append-version="true" style="width:48px;height:48px;"
                                      data-role="interlock-door1-icon" data-ip="@ipTrim" />
                                 <br />
-                                <span class="badge text-bg-primary" style="width:5rem;">Kapı 1</span>
+                                <span class="badge text-bg-primary" style="width:5rem;" data-role="interlock-door1-value" data-ip="@ipTrim">
+                                    @ie.Door1Value
+                                </span>
                             </div>
                             <div style="width:50%;" title="Interlock Kapı 2">
                                 <img src="@door2Icon" asp-append-version="true" style="width:48px;height:48px;"
                                      data-role="interlock-door2-icon" data-ip="@ipTrim" />
                                 <br />
-                                <span class="badge text-bg-primary" style="width:5rem;">Kapı 2</span>
+                                <span class="badge text-bg-primary" style="width:5rem;" data-role="interlock-door2-value" data-ip="@ipTrim">
+                                    @ie.Door2Value
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             }
-
-            <!------------------------------------------------------------------- Görsel Kartlar ------------------------------------------------------------------->
-            <!-- (Senin demo/görsel kartlarını aynen korudum) -->
-            <!-- ... mevcut görsel kartlar burada ... -->
         </div>
     }
     else
@@ -334,9 +342,6 @@
     // === GLOBALS ===
     const lastSeen = new Map();
     const basePulseUrl = '@Url.Page("Index", "Pulse")';
-
-    // currentSort: roleKey (string|null), target (number), discFirst (bool)
-    let currentSort = null;
 
     // === Yardımcılar ===
     function stateFromSrc(img) {
@@ -374,7 +379,8 @@
         return (cardEl.getAttribute('data-disconnected') || 'false') === 'true';
     }
 
-    // === Sıralama ===
+    // === Sıralama (opsiyonel filtre bar için) ===
+    let currentSort = null;
     function sortByRoleAndState(roleKey, target, discFirst = false) {
         const grid = document.querySelector('.cards-grid');
         if (!grid) return;
@@ -389,6 +395,7 @@
 
         list.sort((a, b) => {
             if (discFirst && a.disc !== b.disc) return b.disc - a.disc; // kopuklar önce
+
             const aMatch = (a.val === target) ? 1 : 0;
             const bMatch = (b.val === target) ? 1 : 0;
             if (aMatch !== bMatch) return bMatch - aMatch;
@@ -405,7 +412,6 @@
         }
     }
 
-    // === UI BAĞLANTI & ORİJİNAL SIRA KAYDI ===
     document.addEventListener('DOMContentLoaded', () => {
         const grid = document.querySelector('.cards-grid');
         if (grid) {
@@ -437,24 +443,9 @@
             );
             cards.forEach(c => grid2.appendChild(c));
         });
-
-        const toggleBtn = document.getElementById('toggle-filter');
-        const filterBar = document.getElementById('filter-bar');
-        if (toggleBtn && filterBar) {
-            toggleBtn.addEventListener('click', () => {
-                const isHidden = filterBar.hasAttribute('hidden');
-                if (isHidden) {
-                    filterBar.removeAttribute('hidden');
-                    toggleBtn.setAttribute('aria-expanded','true');
-                } else {
-                    filterBar.setAttribute('hidden','');
-                    toggleBtn.setAttribute('aria-expanded','false');
-                }
-            });
-        }
     });
 
-    // === PULSE ===
+    // === PULSE (yenilemesiz canlı güncelleme) ===
     function buildPulseUrl() {
         const u = new URL(basePulseUrl, window.location.origin);
         u.searchParams.set('_', Date.now().toString());
@@ -470,10 +461,9 @@
             for (const raw of data) {
                 const ip = (raw.ip || '').trim();
                 const ticks = raw.updatedAtTicks || 0;
-                const iconUrl = raw.iconUrl || '';
                 const showOverlay = !!raw.showOverlay;
 
-                // Overlay ve data-disconnected
+                // Overlay ve data-disconnected güncelle
                 let overlays = document.querySelectorAll(`img.status-overlay[data-ip="${ip}"]`);
                 if (overlays.length === 0) overlays = document.querySelectorAll('img.status-overlay[data-ip]');
                 overlays.forEach(ov => {
@@ -486,17 +476,17 @@
                 });
 
                 const prev = lastSeen.get(ip);
-                if (prev === undefined) {
-                    lastSeen.set(ip, ticks);
-                } else if (ticks !== prev) {
-                    // Ana cihaz (emergency) ikon
+                if (prev !== ticks) {
+                    // >>> EKLENDİ: device-icon (Acil Çağrı) güncelle
                     document.querySelectorAll(`img.device-icon[data-ip="${ip}"]`).forEach(img => {
-                        const url = new URL(iconUrl, window.location.origin);
-                        url.searchParams.set('v', String(ticks));
-                        img.src = url.toString();
+                        if (raw.iconUrl) {
+                            const url = new URL(raw.iconUrl, window.location.origin);
+                            url.searchParams.set('v', String(ticks)); // cache-busting
+                            img.src = url.toString();
+                        }
                     });
 
-                    // Yardımcı
+                    // Prison yanları (mevcut güncellemeler)
                     const updateImg = (sel, urlProp) => {
                         const el = document.querySelector(`${sel}[data-ip="${ip}"]`);
                         if (el && raw[urlProp]) {
@@ -506,7 +496,6 @@
                         }
                     };
 
-                    // PrisonEvent ikonları
                     updateImg('img[data-role="cold-icon"]', 'coldIconUrl');
                     const coldSpan = document.querySelector(`span[data-role="cold-consumed"][data-ip="${ip}"]`);
                     if (coldSpan && ('coldConsumed' in raw)) coldSpan.textContent = (raw.coldConsumed ?? '-');
@@ -532,26 +521,31 @@
                     updateImg('img[data-role="intercom-icon"]', 'intercomIconUrl');
                     updateImg('img[data-role="door-icon"]', 'doorIconUrl');
 
-                    // ✅ InterlockEvent ikonları (Kapı 1 / Kapı 2)
+                    // === INTERLOCK (ikon + value) ===
                     updateImg('img[data-role="interlock-door1-icon"]', 'interlockDoor1IconUrl');
                     updateImg('img[data-role="interlock-door2-icon"]', 'interlockDoor2IconUrl');
+
+                    const door1Val = document.querySelector(`span[data-role="interlock-door1-value"][data-ip="${ip}"]`);
+                    if (door1Val && ('interlockDoor1Value' in raw)) door1Val.textContent = (raw.interlockDoor1Value ?? '-');
+
+                    const door2Val = document.querySelector(`span[data-role="interlock-door2-value"][data-ip="${ip}"]`);
+                    if (door2Val && ('interlockDoor2Value' in raw)) door2Val.textContent = (raw.interlockDoor2Value ?? '-');
 
                     lastSeen.set(ip, ticks);
                 }
             }
 
-            // Varsa seçili sıralamayı yeniden uygula
+            // Seçilmiş bir sıralama varsa yeniden uygula
             reapplySortIfAny();
 
-        } catch (e) { /* sessizce yut */ }
+        } catch (e) { /* yut */ }
     }
 
     setInterval(poll, 2000);
     poll();
 
-    // === BLOK FİLTRESİ ===
+    // === BLOK FİLTRESİ (opsiyonel) ===
     let currentBlock = null;
-
     function applyBlockFilter(blockName) {
         const cards = document.querySelectorAll('.device-card');
         cards.forEach(card => {
@@ -564,14 +558,13 @@
             }
         });
     }
-
     function clearBlockFilter() {
         currentBlock = null;
         const cards = document.querySelectorAll('.device-card');
         cards.forEach(card => card.style.display = '');
-        document.getElementById('block-filter').value = '';
+        const sel = document.getElementById('block-filter');
+        if (sel) sel.value = '';
     }
-
     document.addEventListener('DOMContentLoaded', () => {
         const btnApplyBlock = document.getElementById('apply-block');
         const btnClearBlock = document.getElementById('clear-block');
@@ -582,9 +575,6 @@
             currentBlock = blockName;
             applyBlockFilter(blockName);
         });
-
-        btnClearBlock && btnClearBlock.addEventListener('click', () => {
-            clearBlockFilter();
-        });
+        btnClearBlock && btnClearBlock.addEventListener('click', () => clearBlockFilter());
     });
 </script>

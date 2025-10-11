@@ -11,31 +11,22 @@ var connStr = mongo["ConnectionString"]!;
 var dbName = mongo["Database"]!;
 var devCol = mongo["DevicesCollection"]!;
 var evtCol = mongo["EventsCollection"]!;
-// İstersen appsettings’e bunu da eklersin:
 var interlockCol = mongo["InterlockEventsCollection"] ?? "interlockevents";
 
-// IMongoCollection<T> servisleri (senin mevcut kalıbın)
-builder.Services.AddSingleton<IMongoCollection<Device>>(_ =>
-{
-    var client = new MongoClient(connStr);
-    var db = client.GetDatabase(dbName);
-    return db.GetCollection<Device>(devCol);
-});
+// Tekil client & database (temiz ve performanslı DI)
+builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(connStr));
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+    sp.GetRequiredService<IMongoClient>().GetDatabase(dbName));
 
-builder.Services.AddSingleton<IMongoCollection<PrisonEvent>>(_ =>
-{
-    var client = new MongoClient(connStr);
-    var db = client.GetDatabase(dbName);
-    return db.GetCollection<PrisonEvent>(evtCol);
-});
+// Koleksiyonlar
+builder.Services.AddSingleton<IMongoCollection<Device>>(sp =>
+    sp.GetRequiredService<IMongoDatabase>().GetCollection<Device>(devCol));
 
-// ✅ InterlockEvent de aynı kalıpta
-builder.Services.AddSingleton<IMongoCollection<InterlockEvent>>(_ =>
-{
-    var client = new MongoClient(connStr);
-    var db = client.GetDatabase(dbName);
-    return db.GetCollection<InterlockEvent>(interlockCol);
-});
+builder.Services.AddSingleton<IMongoCollection<PrisonEvent>>(sp =>
+    sp.GetRequiredService<IMongoDatabase>().GetCollection<PrisonEvent>(evtCol));
+
+builder.Services.AddSingleton<IMongoCollection<InterlockEvent>>(sp =>
+    sp.GetRequiredService<IMongoDatabase>().GetCollection<InterlockEvent>(interlockCol));
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");

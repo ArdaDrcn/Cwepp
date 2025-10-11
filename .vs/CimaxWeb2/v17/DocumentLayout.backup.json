@@ -11,16 +11,16 @@
       "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\pages\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\001 - cimax web geli\u015Ftirme\\002 - maindevelopment\\cwepp\\cimaxweb2\\models\\devicecardvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\models\\devicecardvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\001 - cimax web geli\u015Ftirme\\002 - maindevelopment\\cwepp\\cimaxweb2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\001 - cimax web geli\u015Ftirme\\002 - maindevelopment\\cwepp\\cimaxweb2\\models\\interlockevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\models\\interlockevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\001 - cimax web geli\u015Ftirme\\002 - maindevelopment\\cwepp\\cimaxweb2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|c:\\001 - cimax web geli\u015Ftirme\\002 - maindevelopment\\cwepp\\cimaxweb2\\models\\devicecardvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3DBA4B8B-6F1C-44E9-B67F-3328C9DBFA4C}|CimaxWeb2\\CimaxWeb2.csproj|solutionrelative:cimaxweb2\\models\\devicecardvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "CimaxWeb2\\Pages\\Index.cshtml.cs",
               "ToolTip": "C:\\001 - Cimax Web Geli\u015Ftirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\Pages\\Index.cshtml.cs",
               "RelativeToolTip": "CimaxWeb2\\Pages\\Index.cshtml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFcBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAALEAAAAAAAAAAAAwwN4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-11T09:19:56.714Z",
               "EditorCaption": ""
@@ -57,14 +57,14 @@
               "RelativeDocumentMoniker": "CimaxWeb2\\Pages\\Index.cshtml",
               "ToolTip": "C:\\001 - Cimax Web Geli\u015Ftirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\Pages\\Index.cshtml",
               "RelativeToolTip": "CimaxWeb2\\Pages\\Index.cshtml",
-              "ViewState": "AgIAAAgBAAAAAAAAAAAAABQBAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAABcCAAAAAAAAAAAwwCgCAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-10-11T09:19:36.638Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "DeviceCardVM.cs",
               "DocumentMoniker": "C:\\001 - Cimax Web Geli\u015Ftirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\Models\\DeviceCardVM.cs",
               "RelativeDocumentMoniker": "CimaxWeb2\\Models\\DeviceCardVM.cs",
@@ -72,8 +72,7 @@
               "RelativeToolTip": "CimaxWeb2\\Models\\DeviceCardVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-11T08:28:01.047Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-11T08:28:01.047Z"
             },
             {
               "$type": "Document",
@@ -83,20 +82,20 @@
               "RelativeDocumentMoniker": "CimaxWeb2\\Models\\InterlockEvent.cs",
               "ToolTip": "C:\\001 - Cimax Web Geli\u015Ftirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\Models\\InterlockEvent.cs",
               "RelativeToolTip": "CimaxWeb2\\Models\\InterlockEvent.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-11T08:23:57.088Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\001 - Cimax Web Geli\u015Ftirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\Program.cs",
               "RelativeDocumentMoniker": "CimaxWeb2\\Program.cs",
               "ToolTip": "C:\\001 - Cimax Web Geli\u015Ftirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\Program.cs",
               "RelativeToolTip": "CimaxWeb2\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-13T07:35:13.859Z",
               "EditorCaption": ""

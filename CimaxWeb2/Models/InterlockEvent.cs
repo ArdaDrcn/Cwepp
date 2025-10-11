@@ -11,14 +11,21 @@ public class InterlockEvent
     [BsonElement("deviceIP")] public string? DeviceIP { get; set; }
     [BsonElement("mac")] public string? Mac { get; set; }
 
-    // Kaynaktaki JSON'da "1"/"0" string olarak geliyor, bu yüzden string mapliyoruz.
-    [BsonElement("door1")] public string? Door1 { get; set; }
-    [BsonElement("door2")] public string? Door2 { get; set; }
+    // <-- Artık obje: { status: "0|1", value: "1928" }
+    [BsonElement("door1")] public DoorChannel? Door1 { get; set; }
+    [BsonElement("door2")] public DoorChannel? Door2 { get; set; }
 
     [BsonElement("createdAtUtc")] public DateTime? CreatedAtUtc { get; set; }
     [BsonElement("updatedAtUtc")] public DateTime? UpdatedAtUtc { get; set; }
 
-    // Kullanımı kolaylaştıran yardımcı özellikler:
-    [BsonIgnore] public bool Door1On => Door1 == "1";
-    [BsonIgnore] public bool Door2On => Door2 == "1";
+    [BsonIgnore] public bool Door1Active => Door1?.Status == "1" || string.Equals(Door1?.Status, "true", StringComparison.OrdinalIgnoreCase);
+    [BsonIgnore] public bool Door2Active => Door2?.Status == "1" || string.Equals(Door2?.Status, "true", StringComparison.OrdinalIgnoreCase);
+    [BsonIgnore] public string Door1Value => Door1?.Value ?? "-";
+    [BsonIgnore] public string Door2Value => Door2?.Value ?? "-";
+}
+
+public class DoorChannel
+{
+    [BsonElement("status")] public string? Status { get; set; } // "0" | "1" | "true"/"false"
+    [BsonElement("value")] public string? Value { get; set; }  // "1928" gibi
 }
