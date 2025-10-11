@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Driver;
 using CimaxWeb2.Models;
@@ -9,13 +9,19 @@ public class IndexModel : PageModel
 {
     private readonly IMongoCollection<Device> _devices;
     private readonly IMongoCollection<PrisonEvent> _events;
+    private readonly IMongoCollection<InterlockEvent> _interlocks; // ✅ YENİ
 
     public List<DeviceCardVM> Cards { get; private set; } = new();
 
-    public IndexModel(IMongoCollection<Device> devices, IMongoCollection<PrisonEvent> eventsCol)
+    public IndexModel(
+        IMongoCollection<Device> devices,
+        IMongoCollection<PrisonEvent> eventsCol,
+        IMongoCollection<InterlockEvent> interlocksCol // ✅ YENİ
+    )
     {
         _devices = devices;
         _events = eventsCol;
+        _interlocks = interlocksCol; // ✅ YENİ
     }
 
     public async Task OnGet()
@@ -26,11 +32,25 @@ public class IndexModel : PageModel
                             .Distinct()
                             .ToList();
 
-        var events = ips.Count == 0
+        // --- PrisonEvent'lerin son kayıtları (IP bazlı) ---
+        var prisonEvents = ips.Count == 0
             ? new List<PrisonEvent>()
             : await _events.Find(e => ips.Contains((e.DeviceIP ?? string.Empty).Trim())).ToListAsync();
 
-        var latestByIp = events
+        var latestPrisonByIp = prisonEvents
+            .Where(e => !string.IsNullOrWhiteSpace(e.DeviceIP))
+            .GroupBy(e => e.DeviceIP!.Trim())
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(x => x.UpdatedAtUtc ?? x.CreatedAtUtc ?? DateTime.MinValue).First()
+            );
+
+        // --- InterlockEvent'lerin son kayıtları (IP bazlı) ✅ ---
+        var interlockEvents = ips.Count == 0
+            ? new List<InterlockEvent>()
+            : await _interlocks.Find(e => ips.Contains((e.DeviceIP ?? string.Empty).Trim())).ToListAsync();
+
+        var latestInterlockByIp = interlockEvents
             .Where(e => !string.IsNullOrWhiteSpace(e.DeviceIP))
             .GroupBy(e => e.DeviceIP!.Trim())
             .ToDictionary(
@@ -43,20 +63,22 @@ public class IndexModel : PageModel
         foreach (var d in deviceList)
         {
             var ip = (d.Ip ?? string.Empty).Trim();
-            latestByIp.TryGetValue(ip, out var evt);
+            latestPrisonByIp.TryGetValue(ip, out var evt);
+            latestInterlockByIp.TryGetValue(ip, out var ilEvt);
 
-            // 1) Ana cihaz kart�
+            // 1) Ana cihaz kartı (PrisonEvent tabanlı)
             list.Add(new DeviceCardVM
             {
                 CardKey = $"{ip}|device",
                 Type = CardType.Device,
                 Device = d,
                 LatestEvent = evt,
+                LatestInterlockEvent = null, // ayrım net olsun
                 Title = (d.Name ?? "(isimsiz cihaz)") + (string.IsNullOrWhiteSpace(d.Location) ? "" : $" - {d.Location}"),
                 IconPath = IconPathFromEmergency(evt)
             });
 
-            // 2) So�uk saya� kart� (varsa)
+            // 2) Soğuk sayaç kartı (varsa)
             if (evt?.ColdWaterMeter != null)
             {
                 list.Add(new DeviceCardVM
@@ -65,12 +87,13 @@ public class IndexModel : PageModel
                     Type = CardType.ColdWater,
                     Device = d,
                     LatestEvent = evt,
-                    Title = $"So�uk Su Sayac� - {d.Location}",
+                    LatestInterlockEvent = null,
+                    Title = $"Soğuk Su Sayacı - {d.Location}",
                     IconPath = IconPathForCold(evt.ColdWaterMeter)
                 });
             }
 
-            // 3) S�cak saya� kart� (varsa)
+            // 3) Sıcak sayaç kartı (varsa)
             if (evt?.HotWaterMeter != null)
             {
                 list.Add(new DeviceCardVM
@@ -79,8 +102,24 @@ public class IndexModel : PageModel
                     Type = CardType.HotWater,
                     Device = d,
                     LatestEvent = evt,
-                    Title = $"S�cak Su Sayac� - {d.Location}",
+                    LatestInterlockEvent = null,
+                    Title = $"Sıcak Su Sayacı - {d.Location}",
                     IconPath = IconPathForHot(evt.HotWaterMeter)
+                });
+            }
+
+            // 4) ✅ Interlock kartı (kapı 1/2) — her IP için 1 adet
+            if (ilEvt != null)
+            {
+                list.Add(new DeviceCardVM
+                {
+                    CardKey = $"{ip}|interlock",
+                    Type = CardType.Device, // yeni CardType tanımlamadan devam ediyoruz
+                    Device = d,
+                    LatestEvent = null,
+                    LatestInterlockEvent = ilEvt,
+                    Title = $"Interlock - {(d.Location ?? d.Name ?? ip)}",
+                    IconPath = IconPathForInterlockHeader(ilEvt) // header sağ ikon için
                 });
             }
         }
@@ -88,7 +127,7 @@ public class IndexModel : PageModel
         Cards = list;
     }
 
-    // --- �kon yollar� (PATH) ---
+    // --- İkon yolları (PATH) --- (PrisonEvent)
     public static string IconPathFromEmergency(PrisonEvent? evt)
     {
         var code = (evt?.EmergencyCall ?? 0) == 1 ? 1 : 0;
@@ -101,7 +140,6 @@ public class IndexModel : PageModel
         return code == 1 ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png";
     }
 
-    // 0�5 mapping: dosya adlar� projendeki ger�ek isimlerle e�le�melidir
     public static string IconPathFromSound(PrisonEvent? evt)
     {
         var code = evt?.Sound ?? 0;
@@ -156,14 +194,23 @@ public class IndexModel : PageModel
     private static string IconPathForHumidity(HumiditySensor m) =>
         IsActive(m.Status) ? "~/img/NemAktif.png" : "~/img/NemPasif.png";
 
-    // --- URL d�nd�ren convenience yard�mc�lar (View'da kullan�yoruz) ---
+    // --- Interlock ikonları (kapı1/kapı2) ✅ ---
+    private static bool On(string? s) => s == "1" || string.Equals(s, "true", StringComparison.OrdinalIgnoreCase);
+
+    public static string IconPathForInterlockDoor(string? doorStatus) =>
+        On(doorStatus) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png";
+
+    public static string IconPathForInterlockHeader(InterlockEvent il) =>
+        (On(il.Door1) || On(il.Door2)) ? "~/img/GirisKapiAktif.png" : "~/img/GirisKapiPasif.png";
+
+    // --- URL döndüren convenience yardımcılar (View tarafında ham path yerine iişe yarar) ---
     public string EmergencyIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromEmergency(evt));
     public string DoorIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromDoor(evt));
     public string SoundIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromSound(evt));
     public string IntercomIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromIntercom(evt));
     public string LaserIconUrl(PrisonEvent? evt) => Url.Content(IconPathFromLaser(evt));
 
-    // --- PULSE DTO ---
+    // --- PULSE DTO --- (Interlock alanları eklendi) ✅ ---
     public record CardPulseDto(
         string Ip,
         long UpdatedAtTicks,
@@ -188,7 +235,11 @@ public class IndexModel : PageModel
         string? LaserIconUrl,
         string? SoundIconUrl,
         string? IntercomIconUrl,
-        string? DoorIconUrl
+        string? DoorIconUrl,
+
+        // ✅ Interlock
+        string? InterlockDoor1IconUrl,
+        string? InterlockDoor2IconUrl
     );
 
     public async Task<IActionResult> OnGetPulse()
@@ -211,15 +262,31 @@ public class IndexModel : PageModel
                 g => g.OrderByDescending(x => x.UpdatedAtUtc ?? x.CreatedAtUtc ?? DateTime.MinValue).First()
             );
 
+        // ✅ Interlock son kayıtlar (Pulse’a dahil)
+        var interlockEvents = ips.Count == 0
+            ? new List<InterlockEvent>()
+            : await _interlocks.Find(e => ips.Contains((e.DeviceIP ?? string.Empty).Trim())).ToListAsync();
+
+        var latestInterlockByIp = interlockEvents
+            .Where(e => !string.IsNullOrWhiteSpace(e.DeviceIP))
+            .GroupBy(e => e.DeviceIP!.Trim())
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(x => x.UpdatedAtUtc ?? x.CreatedAtUtc ?? DateTime.MinValue).First()
+            );
+
         var result = new List<CardPulseDto>();
 
         foreach (var d in deviceList)
         {
             var ip = (d.Ip ?? string.Empty).Trim();
             latestByIp.TryGetValue(ip, out var evt);
+            latestInterlockByIp.TryGetValue(ip, out var ilEvt); // ✅
 
             DateTime stampBase = (evt?.UpdatedAtUtc
                                   ?? evt?.CreatedAtUtc
+                                  ?? ilEvt?.UpdatedAtUtc
+                                  ?? ilEvt?.CreatedAtUtc
                                   ?? d.UpdatedAtUtc
                                   ?? d.CreatedAtUtc
                                   ?? DateTime.MinValue).ToUniversalTime();
@@ -235,6 +302,10 @@ public class IndexModel : PageModel
             var soundUrl = Url.Content(IconPathFromSound(evt));
             var intercomUrl = Url.Content(IconPathFromIntercom(evt));
             var doorUrl = Url.Content(IconPathFromDoor(evt));
+
+            // ✅ Interlock ikon URL'leri
+            string? interDoor1Url = ilEvt != null ? Url.Content(IconPathForInterlockDoor(ilEvt.Door1)) : null;
+            string? interDoor2Url = ilEvt != null ? Url.Content(IconPathForInterlockDoor(ilEvt.Door2)) : null;
 
             result.Add(new CardPulseDto(
                 Ip: ip,
@@ -260,7 +331,10 @@ public class IndexModel : PageModel
                 LaserIconUrl: laserUrl,
                 SoundIconUrl: soundUrl,
                 IntercomIconUrl: intercomUrl,
-                DoorIconUrl: doorUrl
+                DoorIconUrl: doorUrl,
+
+                InterlockDoor1IconUrl: interDoor1Url,
+                InterlockDoor2IconUrl: interDoor2Url
             ));
         }
 

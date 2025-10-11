@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\01 - Calismalar\\001 - Web Geliştirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\CimaxWeb2.csproj": {}
+    "C:\\001 - Cimax Web Geliştirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\CimaxWeb2.csproj": {}
   },
   "projects": {
-    "C:\\01 - Calismalar\\001 - Web Geliştirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\CimaxWeb2.csproj": {
+    "C:\\001 - Cimax Web Geliştirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\CimaxWeb2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\01 - Calismalar\\001 - Web Geliştirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\CimaxWeb2.csproj",
+        "projectUniqueName": "C:\\001 - Cimax Web Geliştirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\CimaxWeb2.csproj",
         "projectName": "CimaxWeb2",
-        "projectPath": "C:\\01 - Calismalar\\001 - Web Geliştirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\CimaxWeb2.csproj",
-        "packagesPath": "C:\\Users\\ArdaDrcnHuma\\.nuget\\packages\\",
-        "outputPath": "C:\\01 - Calismalar\\001 - Web Geliştirme\\Aktif Projeler\\Cwepp\\CimaxWeb2\\obj\\",
+        "projectPath": "C:\\001 - Cimax Web Geliştirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\CimaxWeb2.csproj",
+        "packagesPath": "C:\\Users\\ardad\\.nuget\\packages\\",
+        "outputPath": "C:\\001 - Cimax Web Geliştirme\\002 - MainDevelopment\\Cwepp\\CimaxWeb2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ArdaDrcnHuma\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ardad\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

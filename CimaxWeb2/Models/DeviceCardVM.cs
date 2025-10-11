@@ -1,11 +1,14 @@
-﻿namespace CimaxWeb2.Models;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace CimaxWeb2.Models;
 
 public enum CardType
 {
     Device,        // Ana cihaz
     ColdWater,     // Soğuk su sayacı
     HotWater,      // Sıcak su sayacı
-    Electricity    // Elektrik sayacı  ✅ yeni
+    Electricity    // Elektrik sayacı
 }
 
 public class DeviceCardVM
@@ -17,6 +20,9 @@ public class DeviceCardVM
 
     public Device Device { get; set; } = default!;
     public PrisonEvent? LatestEvent { get; set; }
+
+    // 🔽 YENİ: Interlock son olayını da kart üzerinde taşıyabilelim
+    public InterlockEvent? LatestInterlockEvent { get; set; }
 
     public string Title { get; set; } = "";
     public string IconPath { get; set; } = "/img/icon-0.png";
